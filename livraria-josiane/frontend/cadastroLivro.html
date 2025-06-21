@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Livraria Online</title>
+        <link rel="stylesheet" href="css/style-principal.css">
+        <link rel="stylesheet" href="css/style-detalhe.css">
+    </head>
+    <body>
+        <header>
+            <div class="logo"><img src="../imagens/livraria-img.png" height="40px" width="40px">  Livraria Online</div>
+            <input type="text" id="pesquisa" placeholder="Pesquise pelo livro">    
+            <nav class="navBar">
+                <a href="paginaPrincipal.html">Home</a>
+                <a href="carrinho.html"></a><img src="../imagens/carrinho-img.png" class="carrinho"></a>
+            </nav>
+        </header>
+
+        <main>
+            <div style="display: flex; flex-direction: column;align-items: center;">
+                <h1>Cadastrar Novo Livro</h1>
+                <div id="formLivro">
+                    <label class="label" >Título:</label><br>
+                    <input type="text" id="titulo" required><br><br>
+
+                    <label class="label">Autor:</label><br>
+                    <input type="text" id="autor" required><br><br>
+
+                    <label class="label">Editora:</label><br>
+                    <input type="text" id="editora"><br><br>
+
+                    <label class="label">Preço:</label><br>
+                    <input type="number" id="preco" step="0.01" required><br><br>
+
+                    <label class="label">Estoque:</label><br>
+                    <input type="number" id="estoque" required><br><br>
+
+                    <label class="label">Descrição:</label><br>
+                    <textarea id="descricao" rows="4" cols="50"></textarea><br><br>
+
+                    <label class="label">Categorias:</label><br>
+                    <div id="categorias" class="divCategorias"></div><br><br>
+
+                    <!-- <input type="file" id="imagemLivro"> -->
+
+                </div>
+                <button class="button-comprar" onclick="editarLivro()">Atualizar</button>
+            </div>
+
+            <p id="mensagem"></p>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Livraria Online - Todos os direitos reservados</p>
+        </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        function carregarCategorias() {
+            $.ajax({
+                url: "http://localhost:8080/categorias",
+                method: "GET"
+            }).done(
+                function (categorias) {
+                    categorias.forEach(function (categoria) {
+                        $("#categorias").append(
+                            `<div>
+                                <input type="checkbox" name="categoria" value="${categoria.id}">
+                                <label class="label">${categoria.nome}</label> 
+                            </div>`
+                        )
+                    })
+                }
+            )
+        }
+
+        carregarCategorias();
+
+        function cadastrarLivro() {
+            const categoriasSelecionadas = $("input[name='categoria']:checked").map(
+                function() {
+                    return { id: parseInt($(this).val()) };
+                }
+            ).get();
+
+            $.ajax({
+                url: "http://localhost:8080/livros",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    titulo: $("#titulo").val(),
+                    autor: $("#autor").val(),
+                    editora: $("#editora").val(),
+                    preco: parseFloat($("#preco").val()),
+                    estoque: parseInt($("#estoque").val()),
+                    descricao: $("#descricao").val(),
+                    categorias: categoriasSelecionadas
+                })
+            }).done (
+                function() {
+                    $("#mensagem").text("Livro cadastrado com sucesso!");
+                    $("#formLivro")[0].reset();
+                }
+            ).fail(
+                function() {
+                    $("#mensagem").text("Erro ao cadastrar o livro!");
+                }
+            );
+        }
+    </script>
+</body>
+</html>

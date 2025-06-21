@@ -1,0 +1,145 @@
+:root {
+    --purple: #5c6bc0;
+    --purple-clean: #939edf;
+    --pink: #df93cf;
+    --purple-dark: #563da1;
+    --white: #ffffff;
+    --off-white: #f9f9f9;
+    --gray-dark: #333333;
+}
+
+.produto-detalhe {
+  max-width: 1000px;
+  margin: 30px auto;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.produto-detalhe h1 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.produto-detalhe p {
+  margin-bottom: 30px;
+}
+
+.produto-detalhe a {
+  color: #5c6bc0;
+  text-decoration: none;
+}
+
+.descricao {
+    position: relative;
+    margin-top: 20px;
+}
+
+.produto-conteudo {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-top: 10px;
+}
+
+.imagem-livro {
+  position: relative;
+}
+
+.imagem-livro img {
+  max-width: 250px;
+  border-radius: 5px;
+}
+
+.comprar {
+  flex: 1;
+  max-width: 400px;
+}
+
+.preco {
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.button-comprar {
+    background: var(--purple-dark);
+    border: none;
+    color: #fff;
+    padding: 15px 30px;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+.button-comprar:hover {
+    background: linear-gradient(to top, var(--purple-dark), var(--pink));
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.button-comprar:hover {
+  background: var(--purple-clean);
+}
+
+.frete input[type="text"] {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  width: 150px;
+}
+
+.btn-ok {
+  padding: 10px 15px;
+  margin-left: 5px;
+  background: #ccc;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-ok:hover {
+  background: #aaa;
+}
+
+.titulos {
+    display: flex;
+    gap: 20px;
+}
+
+.conteiner-card {
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 20px;
+    color: inherit;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.button-action {
+    text-decoration: underline;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .produto-conteudo {
+    flex-direction: column;
+    align-items: center;
+  }
+  .comprar {
+    max-width: 100%;
+    text-align: center;
+  }
+}

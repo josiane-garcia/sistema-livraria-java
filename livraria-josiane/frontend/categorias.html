@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Categoria</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 50px;
+        }
+
+        label, input, button {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 5px 15px;
+        }
+
+        #mensagem {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cadastrar Nova Categoria</h1>
+
+    <form id="formCategoria">
+        <label>Nome da Categoria:</label>
+        <input type="text" id="nomeCategoria" required>
+        <button type="button" onclick="cadastrarCategoria()">Cadastrar</button>
+    </form>
+
+    <p id="mensagem"></p>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        function cadastrarCategoria() {
+            const nome = $("#nomeCategoria").val().trim();
+
+            if (nome === "") {
+                $("#mensagem").text("Preencha o nome da categoria.");
+                return;
+            }
+
+            $.ajax({
+                url: "http://localhost:8080/categorias",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ nome: nome })
+            }).done(function () {
+                $("#mensagem").text("Categoria cadastrada com sucesso!");
+                $("#formCategoria")[0].reset();
+            }).fail(function () {
+                $("#mensagem").text("Erro ao cadastrar categoria.");
+            });
+        }
+    </script>
+</body>
+</html>

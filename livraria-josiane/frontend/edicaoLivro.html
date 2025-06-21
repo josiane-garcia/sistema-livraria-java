@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Livraria Online</title>
+        <link rel="stylesheet" href="css/style-principal.css">
+        <link rel="stylesheet" href="css/style-detalhe.css">
+    </head>
+    <body>
+        <header>
+            <div class="logo"><img src="../imagens/livraria-img.png" height="40px" width="40px">  Livraria Online</div>
+            <input type="text" id="pesquisa" placeholder="Pesquise pelo livro">    
+            <nav class="navBar">
+                <a href="paginaPrincipal.html">Home</a>
+                <a href="carrinho.html"></a><img src="../imagens/carrinho-img.png" class="carrinho"></a>
+            </nav>
+        </header>
+
+        <main>
+            <h1>Edição do livro <span id="tituloText"></span></h1>
+
+            <div style="display: flex; flex-direction: column;align-items: center;">
+                <div id="formLivro"></div>
+                <button class="button-comprar" onclick="editarLivro()">Atualizar</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Livraria Online - Todos os direitos reservados</p>
+        </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        let parametros = new URLSearchParams(window.location.search);
+        console.log(parametros);
+        const id = parametros.get("id");
+
+        if (id == null) {
+            id = 1;
+        }
+
+        $.get(`http://localhost:8080/livros/${id}`,
+            function (produto) {
+                $("#tituloText").html(`${produto.titulo}`);
+
+                $("#formLivro").append(
+                    `<label class="label">Título:</label><br>
+                    <input type="text" id="titulo" value="${produto.titulo}"><br><br>
+
+                    <label class="label">Autor:</label><br>
+                    <input type="text" id="autor" value="${produto.autor}"><br><br>
+
+                    <label class="label">Editora:</label><br>
+                    <input type="text" id="editora" value="${produto.editora}"><br><br>
+
+                    <label class="label">Preço:</label><br>
+                    <input type="number" id="preco" value="${produto.preco}" step="0.01" required><br><br>
+
+                    <label class="label">Estoque:</label><br>
+                    <input type="number" id="estoque" value="${produto.estoque}" required><br><br>
+
+                    <label class="label">Descrição:</label><br>
+                    <textarea rows="4" id="descricao" cols="50">${produto.descricao}</textarea><br><br>
+
+                    <label class="label">Categorias:</label><br>
+                    <div id="categorias" class="divCategorias"></div><br><br>`
+                )
+
+                carregarCategorias(produto.categorias);
+            }
+        );
+
+        function carregarCategorias(categoriasSelecionadas) {
+            $.ajax({
+                url: "http://localhost:8080/categorias",
+                method: "GET"
+            }).done(function (categorias) {
+
+                // Loop tradicional
+                for (let i = 0; i < categorias.length; i++) {
+                    let categoria = categorias[i];
+                    let checked = "";
+
+                    for (let j = 0; j < categoriasSelecionadas.length; j++) {
+                        if (categoria.id === categoriasSelecionadas[j].id) {
+                            checked = "checked";
+                            break;
+                        }
+                    }
+
+                    $("#categorias").append(
+                        `<div>
+                            <input type="checkbox" name="categoria" value="${categoria.id}" ${checked}>
+                            <label>${categoria.nome}</label> 
+                        </div>`
+                    );
+                }
+
+            });
+        }
+
+        function editarLivro() {
+            let categoriasSelecionadas = $("input[name='categoria']:checked").map(
+                function() {
+                    return { id: parseInt($(this).val()) };
+                }
+            ).get();
+
+            $.ajax({
+                url: "http://localhost:8080/livros/" + id,
+                method: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    titulo: $("#titulo").val(),
+                    autor: $("#autor").val(),
+                    editora: $("#editora").val(),
+                    preco: parseFloat($("#preco").val()),
+                    estoque: parseInt($("#estoque").val()),
+                    descricao: $("#descricao").val(),
+                    categorias: categoriasSelecionadas
+                })
+            }).done (
+                function() {
+                    alert("Livro atualizado com sucesso!");
+                    window.location.href = `paginaPrincipal.html`;
+                }
+            ).fail(
+                function() {
+                    alert("Erro ao atualizar o livro!");
+                }
+            );
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Livraria Online</title>
+        <link rel="stylesheet" href="css/style-principal.css">
+    </head>
+    <header>
+        <div class="logo"><img src="../imagens/livraria-img.png" height="40px" width="40px">  Livraria Online</div>
+        <input type="text" id="pesquisa" placeholder="Pesquise pelo nome do livro">    
+        <nav class="navBar">
+            <a href="paginaPrincipal.html">Home</a>
+            <a href="carrinho.html"></a><img src="../imagens/carrinho-img.png" class="carrinho"></a>
+        </nav>
+    </header>
+    <body>
+        <div class="header-categorias">
+            <div>
+                <label class="label">Busque por categoria:</label>
+                <select id="categorias" class="select-categorias"><option value="">Todas</option></select>
+            </div>
+            <div>
+                <nav class="nav-expanded">
+                    <ul>
+                        <li class="dropdown"><a href="cadastroLivro.html">Dashboards</a></li>
+                        <li class="dropdown"><a href="">Livros</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="cadastroLivro.html">Cadastrar Livro</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown"><a href="cadastroLivro.html">Pedidos</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        
+        <main>
+            <h2>Catálogo de Livros</h2>
+            <div id="livros" class="livros-container">
+                
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Livraria Online - Todos os direitos reservados</p>
+        </footer>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script>
+
+            function carregarCategorias() {
+                $.ajax({
+                    url: "http://localhost:8080/categorias",
+                    method: "GET"
+                }).done(
+                    function (categorias) {
+                        categorias.forEach(function (categoria) {
+
+                            $("#categorias").append(
+                                `<option value="${categoria.id}">${categoria.nome}</option>`
+                            )
+                        })
+                    }
+                )
+            }
+
+            function carregarLivros(idCategoria, term) {
+                let url = `http://localhost:8080/livros`;
+
+                if (idCategoria) {
+                    url = `http://localhost:8080/livros/categoria/${idCategoria}`;
+                }
+
+                if (term) {
+                    url = `http://localhost:8080/livros/buscar?termo=${encodeURIComponent(term)}`;
+                }
+
+                $.ajax({
+                    url: url,
+                    method: "GET"
+                }).done(
+                    function (livros) {
+                        mostrarLivros(livros);
+                    }
+                )
+            }
+
+            function mostrarLivros (livros) {
+                $("#livros").empty();
+
+                if (livros.length === 0) {
+                    $("#livros").append(`<div class="livro-card" style="align-items: center;">Nenhum livro encontrado.</div>`);
+                    return;
+                }
+
+                livros.forEach(function (livro) {
+                    $("#livros").append(
+                        `<div class="livro-card" style="align-items: left;"">
+                            <h3>${livro.titulo}</h3>
+                            <p><strong>Autor:</strong> ${livro.autor}</p>
+                            <p><strong>Editora:</strong> ${livro.editora}</p>
+                            <p><strong>Preço:</strong> R$ ${livro.preco}</p>
+
+                            <div class='div-buttons'>
+                                <button class='button-card' type='button' onClick="verProduto(${livro.id})">Ver mais</buton>
+                                <button class='button-card'>Adicionar ao carrinho</buton>
+                            </div>
+                        </div>`
+                    )
+                })
+            }
+
+            function verProduto(idProduto) {
+                window.location.href = `detalheLivro.html?id=${idProduto}`;
+            }
+
+            $(document).ready(function() {
+                carregarLivros();
+                carregarCategorias();
+            });
+
+            $("#categorias").on("change", function() {
+                const idCategoria = $(this).val();
+                
+                if (idCategoria) {
+                    carregarLivros(idCategoria);
+                } else {
+                    carregarLivros();
+                }
+            });
+
+            $("#pesquisa").on("input", function() {
+                const term = $(this).val();
+                
+                if (term) {
+                    carregarLivros(null, term);
+                } else {
+                    carregarLivros();
+                }
+            });
+        </script>
+    </body>
+</html>

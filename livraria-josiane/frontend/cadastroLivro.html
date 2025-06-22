@@ -44,7 +44,7 @@
                     <!-- <input type="file" id="imagemLivro"> -->
 
                 </div>
-                <button class="button-comprar" onclick="editarLivro()">Atualizar</button>
+                <button class="button-comprar" onclick="cadastrarLivro()">Atualizar</button>
             </div>
 
             <p id="mensagem"></p>
@@ -98,12 +98,13 @@
                 })
             }).done (
                 function() {
-                    $("#mensagem").text("Livro cadastrado com sucesso!");
-                    $("#formLivro")[0].reset();
+                    // $("#mensagem").text("Livro cadastrado com sucesso!");
+                    alert("Livro cadastrado com sucesso!");
+                    window.location.href = "paginaPrincipal.html";
                 }
             ).fail(
                 function() {
-                    $("#mensagem").text("Erro ao cadastrar o livro!");
+                    alert("Erro ao cadastrar o livro!");
                 }
             );
         }

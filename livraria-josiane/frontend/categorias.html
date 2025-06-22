@@ -1,61 +1,174 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Cadastrar Categoria</title>
-    <style>
-        body {
-            font-family: Arial;
-            margin: 50px;
-        }
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Livraria Online</title>
+        <link rel="stylesheet" href="css/style-principal.css">
+        <link rel="stylesheet" href="css/style-detalhe.css">
+        <link rel="stylesheet" href="css/style-categorias.css">
+    </head>
+    <body>
+        <header>
+            <div class="logo"><img src="../imagens/livraria-img.png" height="40px" width="40px">  Livraria Online</div>
+            <input type="text" id="pesquisa" placeholder="Pesquise pelo livro">    
+            <nav class="navBar">
+                <a href="paginaPrincipal.html">Home</a>
+                <a href="carrinho.html"></a><img src="../imagens/carrinho-img.png" class="carrinho"></a>
+            </nav>
+        </header>
 
-        label, input, button {
-            display: block;
-            margin-bottom: 10px;
-        }
+        <main>
+            <div class="container-categorias">
+                <div class="lista-categorias">
+                    <h2>Categorias Cadastradas</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Descrição</th>
+                                <th colspan="2">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-categorias"></tbody>
+                    </table>
+                </div>
 
-        button {
-            padding: 5px 15px;
-        }
+                <div class="form-categoria">
+                    <div>
+                        <h2>Cadastrar Nova Categoria</h2>
 
-        #mensagem {
-            margin-top: 15px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <h1>Cadastrar Nova Categoria</h1>
+                        <label class="label" >Nome:</label><br>
+                        <input type="text" id="nome" required><br><br>
 
-    <form id="formCategoria">
-        <label>Nome da Categoria:</label>
-        <input type="text" id="nomeCategoria" required>
-        <button type="button" onclick="cadastrarCategoria()">Cadastrar</button>
-    </form>
+                        <label class="label">Descrição:</label><br>
+                        <textarea id="descricao" required></textarea><br><br>
 
-    <p id="mensagem"></p>
+                        <div></div><button class="button-comprar" onclick="cadastrarCategoria()">Cadastrar</button><div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="edit-categoria" class="edit-categoria" style="display:none;">
+
+            </div>
+            <p id="mensagem"></p>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Livraria Online - Todos os direitos reservados</p>
+        </footer>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-        function cadastrarCategoria() {
-            const nome = $("#nomeCategoria").val().trim();
-
-            if (nome === "") {
-                $("#mensagem").text("Preencha o nome da categoria.");
-                return;
-            }
-
+        function carregarCategorias() {
             $.ajax({
-                url: "http://localhost:8080/categorias",
+                url: `http://localhost:8080/categorias`,
+                method: "GET"
+            }).done(
+                function (categorias) {
+                    categorias.forEach(function (categoria) {
+                        $("#tabela-categorias").append(
+                            `<tr>
+                                <td>${categoria.nome}</td>
+                                <td>${categoria.descricao}</td>
+                                <td>
+                                    <button
+                                        style="padding: 5px;margin: 5px;background-color: #939edf;border:none;border-radius: 10px;color: white;cursor:pointer;"
+                                        onclick="mostrarEdit(${categoria.id}, '${categoria.nome}', '${categoria.descricao}')">Editar
+                                    </button>
+                                </td>
+                                <td>
+                                    <button
+                                        style="padding: 5px;margin: 5px;background-color: #939edf;border:none;border-radius: 10px;color: white;cursor:pointer;"
+                                        onclick="excluirCategoria(${categoria.id})">Excluir
+                                    </button>
+                                </td>
+                            </tr>`
+                        )
+                    })
+                }
+            )
+        }
+
+        carregarCategorias();
+
+        function cadastrarCategoria() {
+            $.ajax({
+                url: `http://localhost:8080/categorias`,
                 method: "POST",
                 contentType: "application/json",
-                data: JSON.stringify({ nome: nome })
-            }).done(function () {
-                $("#mensagem").text("Categoria cadastrada com sucesso!");
-                $("#formCategoria")[0].reset();
-            }).fail(function () {
-                $("#mensagem").text("Erro ao cadastrar categoria.");
-            });
+                data: JSON.stringify({
+                    nome: $("#nome").val(),
+                    descricao: $("#descricao").val()
+                })
+            }).done (
+                function() {
+                    alert("Categoria cadastrada com sucesso!");
+                    window.location.href = "categorias.html";
+                }
+            ).fail(
+                function() {
+                    alert("Erro ao cadastrar a categoria!");
+                }
+            );
+        }
+
+        function mostrarEdit(id, nome, descricao) {
+            $("#edit-categoria").empty();
+            $("#edit-categoria").show();
+
+            $("#edit-categoria").append(`
+                <div>
+                    <h2>Editar categoria ${nome}</h2>
+
+                    <label class="label">Nome:</label><br>
+                    <input type="text" id="edit-nome" value="${nome}"><br><br>
+
+                    <label class="label">Descrição:</label><br>
+                    <textarea id="edit-descricao">${descricao}</textarea><br><br>
+
+                    <button class="button-comprar" onclick="editarCategoria(${id})">Editar</button>
+                </div>
+            `);
+        }
+
+        function editarCategoria(id) {
+            $.ajax({
+                url: `http://localhost:8080/categorias/${id}`,
+                method: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    nome: $("#edit-nome").val(),
+                    descricao: $("#edit-descricao").val()
+                })
+            }).done (
+                function() {
+                    alert("Categoria atualizada com sucesso!");
+                    window.location.href = `categorias.html`;
+                }
+            ).fail(
+                function() {
+                    alert("Erro ao atualizar a categoria!");
+                }
+            );
+        }
+
+        function excluirCategoria (id) {
+            if (confirm("Atenção: Quando houverem vínculos com essa categoria, eles serão perdidos!\n\nTem certeza que deseja excluir esta categoria?")) {
+                $.ajax({
+                    url: `http://localhost:8080/categorias/${id}`,
+                    method: "DELETE"
+                }).done(
+                    function () {
+                        alert("Categoria excluída com sucesso!");
+                        window.location.href = "categorias.html";
+                    }
+                ),fail(
+                    function (jqXHR, textStatus, errorThrown) {
+                        console.error("Erro:", errorThrown);
+                        alert("Erro ao excluir a categoria.");
+                });
+            }
         }
     </script>
 </body>

@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-LivrariaApplication<livraria>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.livraria.livraria.LivrariaApplication",
+            "projectName": "livraria",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

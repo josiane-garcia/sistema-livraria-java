@@ -1,6 +1,7 @@
 package com.livraria.livraria.controller;
 
 import com.livraria.livraria.model.domain.Categoria;
+import com.livraria.livraria.model.domain.Livro;
 import com.livraria.livraria.model.service.CategoriaService;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
@@ -38,5 +41,21 @@ public class CategoriaController {
     @PostMapping
     public Categoria salvarCategoria(@RequestBody Categoria categoria) {
         return service.salvarCategoria(categoria);
+    }
+
+    @PutMapping("/{id}")
+    public Categoria atualizarCategoria(@PathVariable Long id, @RequestBody Categoria categoria) {
+        Categoria categoriaSalva = service.buscarPorId(id);
+
+
+        categoriaSalva.setNome(categoria.getNome());
+        categoriaSalva.setDescricao(categoria.getDescricao());
+
+        return service.salvarCategoria(categoriaSalva);
+    }
+
+    @DeleteMapping("/{id}")
+    public void excluirCategoria(@PathVariable Long id) {
+        service.excluirCategoria(id);
     }
 }

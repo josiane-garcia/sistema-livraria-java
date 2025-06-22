@@ -79,9 +79,10 @@ public class LivroController {
 
         List<Categoria> categorias = categoriaService.buscarPorIds(idsCategoria);
 
-        livroSalvo.setCategorias(categorias);
+        livroSalvo.getCategorias().clear();
+        livroSalvo.getCategorias().addAll(categorias);
 
-        return service.salvarLivro(livro);
+        return service.salvarLivro(livroSalvo);
     }
 
     @DeleteMapping("/{id}")

@@ -75,8 +75,6 @@
                 url: "http://localhost:8080/categorias",
                 method: "GET"
             }).done(function (categorias) {
-
-                // Loop tradicional
                 for (let i = 0; i < categorias.length; i++) {
                     let categoria = categorias[i];
                     let checked = "";
@@ -107,7 +105,7 @@
             ).get();
 
             $.ajax({
-                url: "http://localhost:8080/livros/" + id,
+                url: `http://localhost:8080/livros/${id}`,
                 method: "PUT",
                 contentType: "application/json",
                 data: JSON.stringify({

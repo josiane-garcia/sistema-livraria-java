@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Livraria Online</title>
+        <link rel="stylesheet" href="css/style-principal.css">
+        <link rel="stylesheet" href="css/style-detalhe.css">
+        <link rel="stylesheet" href="css/style-categorias.css">
+        <link rel="stylesheet" href="css/style-carrinho.css">
+    </head>
+    <body>
+        <header>
+            <div class="logo"><img src="../imagens/livraria-img.png" height="40px" width="40px">  Livraria Online</div>
+            <input type="text" id="pesquisa" placeholder="Pesquise pelo livro">    
+            <nav class="navBar">
+                <a href="paginaPrincipal.html">Home</a>
+            </nav>
+        </header>
+
+        <main>
+            <section id="carrinho-lista" class="carrinho-lista"></section>
+
+            <!-- <aside class="resumo-carrinho">
+                <h2>Resumo do Pedido</h2>
+                <p id="total-carrinho">Total: R$ 0,00</p>
+                <button class="button-comprar">Finalizar Compra</button>
+            </aside> -->
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Livraria Online - Todos os direitos reservados</p>
+        </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            exibirCarrinho();
+
+            $("#btn-finalizar").click(function() {
+                finalizarCompra();
+            });
+        });
+
+    function exibirCarrinho() {
+        let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+        let container = $("#carrinho-lista");
+        container.empty();
+
+        if (carrinho.length === 0) {
+            container.html(`<aside class="resumo-carrinho"><label class="label">Seu carrinho está vazio</label></aside`);
+            $("#total-carrinho").text("Total: R$ 0,00");
+            return;
+        } else {
+
+        }
+
+        carrinho.forEach((item, index) => {
+            let linha = $(`
+                <div class="item-carrinho">
+                    <div class="item-info">
+                        <strong>${item.titulo}</strong><br>
+                        R$ ${item.preco.toFixed(2)} x ${item.quantidade}
+                    </div>
+                    <div class="item-actions">
+                        <button onclick="alterarQuantidade(${index}, 1)">+</button>
+                        <button onclick="alterarQuantidade(${index}, -1)">-</button>
+                        <button onclick="removerItem(${index})">🗑️</button>
+                    </div>
+                </div>
+            `);
+            container.append(linha);
+        });
+
+        let total = carrinho.reduce((soma, item) => soma + item.preco * item.quantidade, 0);
+        $("#total-carrinho").text(`Total: R$ ${total.toFixed(2)}`);
+    }
+
+// function alterarQuantidade(index, delta) {
+//     let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+//     carrinho[index].quantidade += delta;
+
+//     if (carrinho[index].quantidade <= 0) {
+//         carrinho.splice(index, 1);
+//     }
+
+//     localStorage.setItem("carrinho", JSON.stringify(carrinho));
+//     exibirCarrinho();
+// }
+
+// function removerItem(index) {
+//     let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+//     carrinho.splice(index, 1);
+//     localStorage.setItem("carrinho", JSON.stringify(carrinho));
+//     exibirCarrinho();
+// }
+
+// function finalizarCompra() {
+//     let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+//     if (carrinho.length === 0) {
+//         alert("Seu carrinho está vazio!");
+//         return;
+//     }
+
+//     $.ajax({
+//         url: "http://localhost:8080/pedidos",
+//         method: "POST",
+//         contentType: "application/json",
+//         data: JSON.stringify({ itens: carrinho })
+//     }).done(function() {
+//         alert("Pedido finalizado com sucesso!");
+//         localStorage.removeItem("carrinho");
+//         window.location.href = "paginaPrincipal.html";
+//     }).fail(function() {
+//         alert("Erro ao finalizar pedido.");
+//     });
+// }
+
+    </script>
+</body>
+</html>

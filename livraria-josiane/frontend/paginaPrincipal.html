@@ -104,7 +104,7 @@
 
                             <div class='div-buttons'>
                                 <button class='button-card' type='button' onClick="verProduto(${livro.id})">Ver mais</buton>
-                                <button class='button-card'>Adicionar ao carrinho</buton>
+                                <button class='button-card' type='button' onClick="adicionarAoCarrinho(${livro.id}, '${livro.titulo}', '${livro.preco}')">Adicionar ao carrinho</buton>
                             </div>
                         </div>`
                     )
@@ -113,6 +113,27 @@
 
             function verProduto(idProduto) {
                 window.location.href = `detalheLivro.html?id=${idProduto}`;
+            }
+
+            function adicionarAoCarrinho(idProduto, titulo, preco) {
+                let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+                let itemExistente = carrinho.find(item => item.id === idProduto);
+
+                if (itemExistente) {
+                    itemExistente.quantidade += 1;
+                } else {
+                    carrinho.push({
+                    id: idProduto,
+                    titulo: titulo,
+                    preco: preco,
+                    quantidade: 1
+                    });
+                }
+
+                localStorage.setItem("carrinho", JSON.stringify(carrinho));
+                alert("Livro adicionado ao carrinho!");
+                
             }
 
             $(document).ready(function() {

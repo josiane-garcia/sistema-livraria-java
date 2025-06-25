@@ -46,20 +46,20 @@
         let container = $("#carrinho-lista");
         container.empty();
 
+        console.log(carrinho.length)
         if (carrinho.length === 0) {
-            container.html(`<aside class="resumo-carrinho"><label class="label">Seu carrinho está vazio</label></aside`);
+            container.html(`<div class="resumo-carrinho"><label class="label">Seu carrinho está vazio</label></div`);
             $("#total-carrinho").text("Total: R$ 0,00");
             return;
-        } else {
-
-        }
+        } 
 
         carrinho.forEach((item, index) => {
+            console.log(item)
             let linha = $(`
                 <div class="item-carrinho">
                     <div class="item-info">
                         <strong>${item.titulo}</strong><br>
-                        R$ ${item.preco.toFixed(2)} x ${item.quantidade}
+                        R$ ${parseFloat(item.preco).toFixed(2)} x ${item.quantidade}
                     </div>
                     <div class="item-actions">
                         <button style="padding: 5px;margin: 5px;background-color: #939edf;border-radius: 10px;color: white;" onclick="alterarQuantidade(${index}, 1)">+</button>
@@ -67,7 +67,7 @@
                         <button style="padding: 5px;margin: 5px;background-color: #939edf;border-radius: 10px;color: white;" onclick="removerItem(${index})">🗑️</button>
                     </div>
                 </div>
-            `);
+            </div>`);
             container.append(linha);
         });
 
@@ -75,46 +75,46 @@
         $("#total-carrinho").text(`Total: R$ ${total.toFixed(2)}`);
     }
 
-// function alterarQuantidade(index, delta) {
-//     let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-//     carrinho[index].quantidade += delta;
+    function alterarQuantidade(index, delta) {
+        let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+        carrinho[index].quantidade += delta;
 
-//     if (carrinho[index].quantidade <= 0) {
-//         carrinho.splice(index, 1);
-//     }
+        if (carrinho[index].quantidade <= 0) {
+            carrinho.splice(index, 1);
+        }
 
-//     localStorage.setItem("carrinho", JSON.stringify(carrinho));
-//     exibirCarrinho();
-// }
+        localStorage.setItem("carrinho", JSON.stringify(carrinho));
+        exibirCarrinho();
+    }
 
-// function removerItem(index) {
-//     let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-//     carrinho.splice(index, 1);
-//     localStorage.setItem("carrinho", JSON.stringify(carrinho));
-//     exibirCarrinho();
-// }
+    function removerItem(index) {
+        let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+        carrinho.splice(index, 1);
+        localStorage.setItem("carrinho", JSON.stringify(carrinho));
+        exibirCarrinho();
+    }
 
-// function finalizarCompra() {
-//     let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+    // function finalizarCompra() {
+    //     let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
-//     if (carrinho.length === 0) {
-//         alert("Seu carrinho está vazio!");
-//         return;
-//     }
+    //     if (carrinho.length === 0) {
+    //         alert("Seu carrinho está vazio!");
+    //         return;
+    //     }
 
-//     $.ajax({
-//         url: "http://localhost:8080/pedidos",
-//         method: "POST",
-//         contentType: "application/json",
-//         data: JSON.stringify({ itens: carrinho })
-//     }).done(function() {
-//         alert("Pedido finalizado com sucesso!");
-//         localStorage.removeItem("carrinho");
-//         window.location.href = "paginaPrincipal.html";
-//     }).fail(function() {
-//         alert("Erro ao finalizar pedido.");
-//     });
-// }
+    //     $.ajax({
+    //         url: "http://localhost:8080/pedidos",
+    //         method: "POST",
+    //         contentType: "application/json",
+    //         data: JSON.stringify({ itens: carrinho })
+    //     }).done(function() {
+    //         alert("Pedido finalizado com sucesso!");
+    //         localStorage.removeItem("carrinho");
+    //         window.location.href = "paginaPrincipal.html";
+    //     }).fail(function() {
+    //         alert("Erro ao finalizar pedido.");
+    //     });
+    // }
 
     </script>
 </body>

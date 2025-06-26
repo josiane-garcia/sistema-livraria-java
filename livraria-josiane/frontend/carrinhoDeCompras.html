@@ -18,13 +18,11 @@
         </header>
 
         <main>
-            <section id="carrinho-lista" class="carrinho-lista"></section>
+            <section id="carrinho-lista" class="carrinho-lista">
 
-            <!-- <aside class="resumo-carrinho">
-                <h2>Resumo do Pedido</h2>
-                <p id="total-carrinho">Total: R$ 0,00</p>
-                <button class="button-comprar">Finalizar Compra</button>
-            </aside> -->
+            </section>
+            <section id="total-carrinho" class="item-carrinho">
+            </section>
         </main>
 
         <footer>
@@ -44,6 +42,7 @@
     function exibirCarrinho() {
         let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
         let container = $("#carrinho-lista");
+        let conteudo = ``;
         container.empty();
 
         console.log(carrinho.length)
@@ -53,26 +52,47 @@
             return;
         } 
 
+        conteudo = `
+            <div class="item-carrinho">
+                <table class="lista-categorias">
+                    <tr>
+                        <th>Livro</th>   
+                        <th>Preço</th>   
+                        <th>Quantidade</th>   
+                        <th>Subtotal</th>   
+                        <th></th>   
+                    </tr>
+        `;
         carrinho.forEach((item, index) => {
-            console.log(item)
-            let linha = $(`
-                <div class="item-carrinho">
-                    <div class="item-info">
-                        <strong>${item.titulo}</strong><br>
-                        R$ ${parseFloat(item.preco).toFixed(2)} x ${item.quantidade}
-                    </div>
-                    <div class="item-actions">
-                        <button style="padding: 5px;margin: 5px;background-color: #939edf;border-radius: 10px;color: white;" onclick="alterarQuantidade(${index}, 1)">+</button>
-                        <button style="padding: 5px;margin: 5px;background-color: #939edf;border-radius: 10px;color: white;" onclick="alterarQuantidade(${index}, -1)">-</button>
-                        <button style="padding: 5px;margin: 5px;background-color: #939edf;border-radius: 10px;color: white;" onclick="removerItem(${index})">🗑️</button>
-                    </div>
-                </div>
-            </div>`);
-            container.append(linha);
+            conteudo +=`
+                <tr>
+                    <td><strong>${item.titulo}</strong><br></td>   
+                    <td>R$ ${parseFloat(item.preco).toFixed(2)}</td>   
+                    <td>
+                        <button class="button-actions" onclick="alterarQuantidade(${index}, -1)">-</button>
+                        <span>${item.quantidade}</span>
+                        <button class="button-actions" onclick="alterarQuantidade(${index}, 1)">+</button>
+                    </td>   
+                    <td>R$ ${parseFloat(item.preco).toFixed(2)*item.quantidade}</td>   
+                    <td>
+                        <button 
+                            style="padding: 5px;margin: 5px;background-color: #939edf;border:none;border-radius: 10px;color: white;cursor:pointer;"
+                            onclick="removerItem(${index})">Remover</button>    
+                    </td>   
+                </tr>`;
         });
+        
+        conteudo += `</table></div>`;
+        container.append(conteudo);
+
 
         let total = carrinho.reduce((soma, item) => soma + item.preco * item.quantidade, 0);
-        $("#total-carrinho").text(`Total: R$ ${total.toFixed(2)}`);
+        $("#total-carrinho").html(
+            `<di style="display:flex;flex-direction:column;align-items:center;">
+                <p>Total: R$ ${total.toFixed(2)}</p>
+                <button class="button-comprar">Finalizar Compra</button>
+            </div>
+        `);
     }
 
     function alterarQuantidade(index, delta) {

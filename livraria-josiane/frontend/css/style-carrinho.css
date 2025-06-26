@@ -19,12 +19,31 @@ main {
   flex-direction: column;
   align-items: center;
   margin-top: 30px;
+  gap: 20px;
 }
 
 .carrinho-lista {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+}
+
+.button-actions {
+  padding: 5px;
+  margin: 5px;
+  background-color: var(--purple-clean);
+  border-radius: 10px;
+  color: var(--white);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.button-actions:hover {
+  background-color: var(--purple-dark);
 }
 
 .item-carrinho {
@@ -54,22 +73,6 @@ main {
 .item-actions {
   display: flex;
   gap: 10px;
-}
-
-.item-actions button {
-  background: #0077cc;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.item-actions button:hover {
-  background: #005fa3;
 }
 
 .resumo-carrinho {

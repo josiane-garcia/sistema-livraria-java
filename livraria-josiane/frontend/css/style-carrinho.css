@@ -56,6 +56,20 @@ main {
   align-items: center;
 }
 
+.item-resumo {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding:20px 30px;
+  align-items: center;
+}
+
+.item-resumo button {
+  margin-bottom: 0px;
+}
+
 .item-info {
   flex: 1;
 }
@@ -76,10 +90,11 @@ main {
 }
 
 .resumo-carrinho {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
 }
 
 .resumo-carrinho h2 {

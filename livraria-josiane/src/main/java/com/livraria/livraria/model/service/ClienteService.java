@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import com.livraria.livraria.model.domain.Cliente;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ClienteService {
@@ -15,12 +14,17 @@ public class ClienteService {
         this.repository = repository;
     }
 
+    public List<Cliente> listarAtivos() {
+        return repository.findByAtivoTrue();
+    }
+
     public List<Cliente> listarCientes() {
         return repository.findAll();
     }
 
-    public Optional<Cliente> buscaPorId(Long id) {
-        return repository.findById(id);
+    public Cliente buscaPorId(Long id) {
+        return repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Cliente não encontrado!"));
     }
 
     public List<Cliente> buscaClientePorTermo(String termo) {
@@ -29,6 +33,14 @@ public class ClienteService {
 
     public Cliente salvarCliente(Cliente cliente) {
         return repository.save(cliente);
+    }
+
+    public void desativarCliente(Long id) {
+        Cliente cliente = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Cliente não encontrado!"));
+
+        cliente.setAtivo(false);
+        repository.save(cliente);
     }
 
     public void excluirCliente(Long id) {

@@ -33,14 +33,18 @@ public class ClienteController {
     }
 
     @GetMapping
+    public List<Cliente> getClientesAtivos() {
+        return service.listarAtivos();
+    }
+
+    @GetMapping("/all")
     public List<Cliente> getClientes() {
         return service.listarCientes();
     }
 
     @GetMapping("/{id}")
     public Cliente buscaPorId(@PathVariable Long id) {
-        return service.buscaPorId(id)
-            .orElseThrow(() -> new RuntimeException("Cliente não encontrado!"));
+        return service.buscaPorId(id);
     }
 
     @GetMapping("/buscar")
@@ -53,10 +57,9 @@ public class ClienteController {
         return service.salvarCliente(cliente);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public Cliente atualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
-        Cliente clienteSalvo = service.buscaPorId(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado!"));
+        Cliente clienteSalvo = service.buscaPorId(id);
 
         clienteSalvo.setNome(cliente.getNome());
         clienteSalvo.setCpf(cliente.getCpf());
@@ -64,6 +67,11 @@ public class ClienteController {
         clienteSalvo.setCelular(cliente.getCelular());
 
         return service.salvarCliente(clienteSalvo);
+    }
+    
+    @DeleteMapping("/desativar/{id}")
+    public void desativarCliente(@PathVariable Long id) {
+        service.desativarCliente(id);
     }
 
     @DeleteMapping("/{id}")

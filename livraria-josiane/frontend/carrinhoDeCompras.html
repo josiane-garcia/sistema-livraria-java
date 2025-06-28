@@ -101,24 +101,24 @@
             `;
 
         totalCarrinho.append(resumo);
-        // carregarClientes();
+        carregarClientes();
     }
 
-    // function carregarClientes() {
-    //     $.ajax({
-    //         url: "http://localhost:8080/clientes",
-    //         method: "GET"
-    //     }).done(
-    //         function (clientes) {
-    //             clientes.forEach(function (cliente) {
+    function carregarClientes() {
+        $.ajax({
+            url: "http://localhost:8080/clientes",
+            method: "GET"
+        }).done(
+            function (clientes) {
+                clientes.forEach(function (cliente) {
 
-    //                 $("#clientes").append(
-    //                     `<option value="${cliente.id}">${cliente.nome}</option>`
-    //                 )
-    //             })
-    //         }
-    //     )
-    // }
+                    $("#clientes").append(
+                        `<option value="${cliente.id}">${cliente.nome}</option>`
+                    )
+                })
+            }
+        )
+    }
 
     function alterarQuantidade(index, delta) {
         let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];

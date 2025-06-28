@@ -19,6 +19,8 @@ public class Cliente {
     private String cpf;
     private String email;
     private String celular;
-    private Integer ativo; //1 - sim e 0 - não
+
+    @Column(nullable = false)
+    private Boolean ativo = true;
 
 }

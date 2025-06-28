@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Livraria Online</title>
+        <link rel="stylesheet" href="css/style-principal.css">
+        <link rel="stylesheet" href="css/style-detalhe.css">
+    </head>
+    <header>
+        <div class="logo"><img src="../imagens/livraria-img.png" height="40px" width="40px">  Livraria Online</div>
+        <input type="text" id="pesquisa" placeholder="Pesquise pelo nome do cliente">    
+        <nav class="navBar">
+            <a href="paginaPrincipal.html">Home</a>
+            <a href="carrinhoDeCompras.html"><img src="../imagens/carrinho-img.png" class="carrinho"></a>
+        </nav>
+    </header>
+    <body>
+        <div class="header-categorias">
+            <div>
+
+            </div>
+            <div>
+                <nav class="nav-expanded">
+                    <ul>
+                        <li class="dropdown"><a href="cadastroLivro.html">Dashboards</a></li>
+                        <li class="dropdown"><a>Livros</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="cadastroLivro.html">Cadastrar Livro</a></li>
+                                <li><a href="categorias.html">Categorias</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown"><a>Clientes</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="cadastroCliente.html">Cadastrar Cliente</a></li>
+                                <li><a href="clientes.html">Clientes</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown"><a href="cadastroLivro.html">Pedidos</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        
+        <main>
+            <h2>Clientes cadastrados</h2>
+            <div id="clientes" class="clientes-container">
+                
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Livraria Online - Todos os direitos reservados</p>
+        </footer>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script>
+
+            function carregarClientes(term) {
+                let url = `http://localhost:8080/clientes`;
+
+                if (term) {
+                    url = `http://localhost:8080/clientes/buscar?termo=${encodeURIComponent(term)}`;
+                }
+
+                $.ajax({
+                    url: url,
+                    method: "GET"
+                }).done(
+                    function (clientes) {
+                        mostrarClientes(clientes);
+                    }
+                )
+            }
+
+            function mostrarClientes (clientes) {
+                $("#clientes").empty();
+
+                if (clientes.length === 0) {
+                    $("#clientes").append(`<div class="livro-card" style="align-items: center;">Nenhum cliente cadastrado.</div>`);
+                    return;
+                }
+
+                clientes.forEach(function (cliente) {
+                    $("#clientes").append(
+                        `<div class="cliente-card" style="align-items: left;"">
+                            <div>
+                                <h3>${cliente.nome}</h3>
+                                <p><strong>CPF:</strong> ${cliente.cpf}</p>
+                                <p><strong>E-mail:</strong> ${cliente.email}</p>
+                                <p><strong>Celular:</strong> R$ ${cliente.celular}</p>
+                            </div>
+
+                            <div class='cliente-button'>
+                                <button class='button-comprar' type='button' onClick="editarCliente(${cliente.id})">Editar</buton>
+                                <button class='button-comprar' type='button' onClick="excluirCliente(${cliente.id})">Excluir</buton>
+                            </div>
+                        </div>`
+                    )
+                })
+            }
+
+            function editarCliente(idCliente) {  
+                window.location.href = `edicaoCliente.html?id=${idCliente}`;
+            }
+
+            $(document).ready(function() {
+                carregarClientes();
+            });
+
+            $("#pesquisa").on("input", function() {
+                const term = $(this).val();
+                
+                if (term) {
+                    carregarClientes(term);
+                } else {
+                    carregarClientes();
+                }
+            });
+        </script>
+    </body>
+</html>

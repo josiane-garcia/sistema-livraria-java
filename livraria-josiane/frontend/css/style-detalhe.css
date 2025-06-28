@@ -133,6 +133,41 @@
     font-size: 1rem;
 }
 
+.clientes-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  max-width: 1000px; /* 3 cards + 2 gaps de 25px */
+  margin: 0 auto; /* centraliza */
+}
+
+.cliente-card {
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 20px;
+    color: inherit;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.cliente-card h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.cliente-card p {
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+}
+
+.cliente-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 @media (max-width: 768px) {
   .produto-conteudo {
     flex-direction: column;

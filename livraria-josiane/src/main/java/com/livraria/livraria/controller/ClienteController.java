@@ -1,6 +1,7 @@
 package com.livraria.livraria.controller;
 
 import com.livraria.livraria.model.domain.Cliente;
+import com.livraria.livraria.model.domain.Livro;
 import com.livraria.livraria.model.service.ClienteService;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,6 +35,12 @@ public class ClienteController {
     @GetMapping
     public List<Cliente> getClientes() {
         return service.listarCientes();
+    }
+
+    @GetMapping("/{id}")
+    public Cliente buscaPorId(@PathVariable Long id) {
+        return service.buscaPorId(id)
+            .orElseThrow(() -> new RuntimeException("Cliente não encontrado!"));
     }
 
     @GetMapping("/buscar")

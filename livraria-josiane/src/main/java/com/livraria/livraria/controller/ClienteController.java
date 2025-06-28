@@ -37,7 +37,7 @@ public class ClienteController {
     }
 
     @GetMapping("/buscar")
-    public List<Cliente> listarClientesPorTermo(@PathVariable String termo) {
+    public List<Cliente> listarClientesPorTermo(@RequestParam String termo) {
         return service.buscaClientePorTermo(termo);
     }
 

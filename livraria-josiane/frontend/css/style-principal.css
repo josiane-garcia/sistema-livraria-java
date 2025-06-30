@@ -73,7 +73,7 @@ header {
     box-shadow: 0 0 0 2px rgba(92, 107, 192, 0.3);
 }
 
-input[type="text"], input[type="number"], textarea, input[type="file"] {
+input[type="text"], input[type="number"], textarea, input[type="file"], .select-editora {
   border: 2px solid #5c6bc0;
   padding: 10px 15px;
   border-radius: 5px;
@@ -83,7 +83,7 @@ input[type="text"], input[type="number"], textarea, input[type="file"] {
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-input[type="text"]:focus, input[type="number"]:focus, textarea {
+input[type="text"]:focus, input[type="number"]:focus, textarea:focus, .select-editora:focus {
   outline: none;
   border-color: #3949ab;
   box-shadow: 0 0 0 2px rgba(92, 107, 192, 0.3);

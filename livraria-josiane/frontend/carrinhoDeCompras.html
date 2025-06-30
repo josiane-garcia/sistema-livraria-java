@@ -38,70 +38,68 @@
             });
         });
 
-    function exibirCarrinho() {
-        let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-        let container = $("#carrinho-lista");
-        let totalCarrinho = $("#total-carrinho");
-        let conteudo = ``;
-        container.empty();
+        async function exibirCarrinho() {
+            let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+            let container = $("#carrinho-lista");
+            let totalCarrinho = $("#total-carrinho");
+            let conteudo = ``;
+            container.empty();
 
-        console.log(carrinho.length)
-        if (carrinho.length === 0) {
-            container.html(`<div class="resumo-carrinho"><label class="label">Seu carrinho está vazio</label></div`);
-            $("#total-carrinho").text("Total: R$ 0,00");
-            return;
-        } 
-
-        conteudo = `
-            <div class="item-carrinho">
-                <table class="lista-categorias">
-                    <tr>
-                        <th>Livro</th>   
-                        <th>Preço</th>   
-                        <th>Quantidade</th>   
-                        <th>Subtotal</th>   
-                        <th></th>   
-                    </tr>
-        `;
-        carrinho.forEach((item, index) => {
-            conteudo +=`
-                <tr>
-                    <td><strong>${item.titulo}</strong><br></td>   
-                    <td>R$ ${parseFloat(item.preco).toFixed(2)}</td>   
-                    <td>
-                        <button class="button-actions" onclick="alterarQuantidade(${index}, -1)">-</button>
-                        <span>${item.quantidade}</span>
-                        <button class="button-actions" onclick="alterarQuantidade(${index}, 1)">+</button>
-                    </td>   
-                    <td>R$ ${parseFloat(item.preco).toFixed(2)*item.quantidade}</td>   
-                    <td>
-                        <button 
-                            style="padding: 5px;margin: 5px;background-color: #939edf;border:none;border-radius: 10px;color: white;cursor:pointer;"
-                            onclick="removerItem(${index})">Remover</button>    
-                    </td>   
-                </tr>`;
-        });
-        
+            if (carrinho.length === 0) {
+                container.html(`<div class="item-resumo"><label class="label">Seu carrinho está vazio</label></div`);
+                return;
+            } 
+            
+            conteudo = `
+                <div class="item-carrinho">
+                    <table class="lista-categorias">
+                        <tr>
+                            <th>Livro</th>   
+                            <th>Preço</th>   
+                            <th>Quantidade</th>   
+                            <th>Subtotal</th>   
+                            <th></th>   
+                        </tr>
+                        `;
+                        carrinho.forEach((item, index) => {
+                            conteudo +=`
+                            <tr>
+                                <td><strong>${item.titulo}</strong><br></td>   
+                        <td>R$ ${parseFloat(item.preco).toFixed(2)}</td>   
+                        <td>
+                            <button class="button-actions" onclick="alterarQuantidade(${index}, -1)">-</button>
+                            <span>${item.quantidade}</span>
+                            <button class="button-actions" onclick="alterarQuantidade(${index}, 1)">+</button>
+                            </td>   
+                            <td>R$ ${parseFloat(item.preco).toFixed(2)*item.quantidade}</td>   
+                        <td>
+                            <button 
+                                style="padding: 5px;margin: 5px;background-color: #939edf;border:none;border-radius: 10px;color: white;cursor:pointer;"
+                                onclick="removerItem(${index})">Remover</button>    
+                        </td>   
+                        </tr>`;
+                    });
+                    
         conteudo += `</table></div>`;
         container.append(conteudo);
-
+        
         let total = carrinho.reduce((soma, item) => soma + item.preco * item.quantidade, 0);
-
+        
         let resumo = `
-            <div class="item-resumo" >
+            <div class="item-resumo">
                 <label class="label">Cliente:</label>
                 <select id="clientes" class="select-categorias">
-                    
                 </select>    
             </div>
             <div class="item-resumo">
                 <p>Total: R$ ${total.toFixed(2)}</p>
                 <button class="button-comprar">Finalizar Compra</button>
-            </div>
+                </div>
             `;
-
+            
         totalCarrinho.append(resumo);
         carregarClientes();
+        
     }
 
     function carregarClientes() {
@@ -110,12 +108,29 @@
             method: "GET"
         }).done(
             function (clientes) {
-                clientes.forEach(function (cliente) {
+                if (clientes.length != 0) {
+                    clientes.forEach(function (cliente) {
 
-                    $("#clientes").append(
-                        `<option value="${cliente.id}">${cliente.nome}</option>`
-                    )
-                })
+                        $("#clientes").append(
+                            `<option value="${cliente.id}">${cliente.nome}</option>`
+                        )
+                    })
+                } else {
+                    let clientes = $("#clientes");
+                    let totalCarrinho = $("#total-carrinho");
+
+                    let resumo = `
+                        <div class="item-resumo" >
+                            <label class="label">Não há clientes ativos</label>  
+                        </div>
+                        <div class="item-resumo">
+                            <p>Total: --</p>
+                        </div>
+                        `;
+
+                    totalCarrinho.empty();
+                    totalCarrinho.append(resumo);
+                }
             }
         )
     }

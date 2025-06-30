@@ -1,7 +1,6 @@
 package com.livraria.livraria.controller;
 
 import com.livraria.livraria.model.domain.Cliente;
-import com.livraria.livraria.model.domain.Livro;
 import com.livraria.livraria.model.service.ClienteService;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,9 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
 import java.util.List;
 

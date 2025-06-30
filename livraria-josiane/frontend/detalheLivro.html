@@ -94,9 +94,10 @@
 
         $.get(`http://localhost:8080/livros/${id}`,
             function (produto) {
+                console.log(produto)
                 $("#titulo").html(produto.titulo)
                 $("#autor").html(produto.autor)
-                $("#editora").html(produto.editora)
+                $("#editora").html(produto.editora.nome)
                 $("#preco").html(produto.preco.toFixed(2))
                 $("#estoque").html(produto.estoque)
                 if (produto.descricao !== '') {

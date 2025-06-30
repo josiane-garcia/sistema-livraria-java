@@ -26,7 +26,7 @@
                     <input type="text" id="autor" required><br><br>
 
                     <label class="label">Editora:</label><br>
-                    <input type="text" id="editora"><br><br>
+                    <select class="select-editora" id="editora"></select><br><br>
 
                     <label class="label">Preço:</label><br>
                     <input type="number" id="preco" step="0.01" required><br><br>
@@ -75,6 +75,23 @@
 
         carregarCategorias();
 
+        function carregarEditoras() {
+            $.ajax({
+                url: "http://localhost:8080/editoras",
+                method: "GET"
+            }).done(
+                function (editoras) {
+                    editoras.forEach(function (editora) {
+                        $("#editora").append(
+                            `<option name="editora" value="${editora.id}">${editora.nome}</option>`
+                        )
+                    })
+                }
+            )
+        }
+
+        carregarEditoras();
+
         function cadastrarLivro() {
             const categoriasSelecionadas = $("input[name='categoria']:checked").map(
                 function() {
@@ -89,7 +106,9 @@
                 data: JSON.stringify({
                     titulo: $("#titulo").val(),
                     autor: $("#autor").val(),
-                    editora: $("#editora").val(),
+                    editora: {
+                        id: parseInt($("#editora").val())
+                    },
                     preco: parseFloat($("#preco").val()),
                     estoque: parseInt($("#estoque").val()),
                     descricao: $("#descricao").val(),

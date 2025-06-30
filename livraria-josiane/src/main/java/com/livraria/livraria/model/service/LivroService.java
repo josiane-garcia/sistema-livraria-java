@@ -5,6 +5,8 @@ import com.livraria.livraria.model.repository.LivroRepository;
 
 import com.livraria.livraria.model.domain.Categoria;
 import com.livraria.livraria.model.repository.CategoriaRepository;
+import com.livraria.livraria.model.domain.Editora;
+import com.livraria.livraria.model.repository.EditoraRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -16,10 +18,14 @@ import java.util.Optional;
 
 @Service
 public class LivroService {
+    private final LivroRepository repository;
 
     @Autowired
     private CategoriaRepository categoriaRepository;
-    private final LivroRepository repository;
+    
+    @Autowired
+    private EditoraRepository editoraRepository;
+
 
     public LivroService(LivroRepository repository) {
         this.repository = repository;
@@ -42,6 +48,12 @@ public class LivroService {
     }
 
     public Livro salvarLivro(Livro livro) {
+        if (livro.getEditora() != null && livro.getEditora().getId() != null) {
+            Editora editora = editoraRepository.findById(livro.getEditora().getId())
+                .orElseThrow(() -> new RuntimeException("Editora não encontrada"));
+            livro.setEditora(editora);
+        }
+
         return repository.save(livro);
     }
 

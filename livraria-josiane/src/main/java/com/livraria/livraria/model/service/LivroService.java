@@ -47,6 +47,10 @@ public class LivroService {
         return repository.findById(id);
     }
 
+    public List<Livro> verificarLivros(List<Long> ids) {
+        return repository.findAllById(ids);
+    }
+
     public Livro salvarLivro(Livro livro) {
         if (livro.getEditora() != null && livro.getEditora().getId() != null) {
             Editora editora = editoraRepository.findById(livro.getEditora().getId())

@@ -40,9 +40,9 @@
 
         async function exibirCarrinho() {
             let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-            let container = $("#carrinho-lista");
             let totalCarrinho = $("#total-carrinho");
-            let conteudo = ``;
+            
+            let container = $("#carrinho-lista");
             container.empty();
 
             if (carrinho.length === 0) {
@@ -51,7 +51,7 @@
                 return;
             } 
             
-            conteudo = `
+            let conteudo = `
                 <div class="item-carrinho">
                     <table class="lista-categorias">
                         <tr>
@@ -62,118 +62,152 @@
                             <th></th>   
                         </tr>
                         `;
-                        carrinho.forEach((item, index) => {
-                            conteudo +=`
-                            <tr>
-                                <td><strong>${item.titulo}</strong><br></td>   
-                        <td>R$ ${parseFloat(item.preco).toFixed(2)}</td>   
-                        <td>
-                            <button class="button-actions" onclick="alterarQuantidade(${index}, -1)">-</button>
-                            <span>${item.quantidade}</span>
-                            <button class="button-actions" onclick="alterarQuantidade(${index}, 1)">+</button>
-                            </td>   
-                            <td>R$ ${parseFloat(item.preco).toFixed(2)*item.quantidade}</td>   
-                        <td>
-                            <button 
-                                style="padding: 5px;margin: 5px;background-color: #939edf;border:none;border-radius: 10px;color: white;cursor:pointer;"
-                                onclick="removerItem(${index})">Remover</button>    
-                        </td>   
-                        </tr>`;
-                    });
+            carrinho.forEach((item, index) => {
+                conteudo +=`
+                <tr>
+                    <td><strong>${item.titulo}</strong><br></td>   
+                    <td>R$ ${parseFloat(item.preco).toFixed(2)}</td>   
+                    <td>
+                        <button class="button-actions" onclick="alterarQuantidade(${index}, -1)">-</button>
+                        <span>${item.quantidade}</span>
+                        <button class="button-actions" onclick="alterarQuantidade(${index}, 1)">+</button>
+                    </td>   
+                    <td>R$ ${parseFloat(item.preco).toFixed(2)*item.quantidade}</td>   
+                    <td>
+                        <button 
+                            style="padding: 5px;margin: 5px;background-color: #939edf;border:none;border-radius: 10px;color: white;cursor:pointer;"
+                            onclick="removerItem(${index})">Remover</button>    
+                    </td>   
+                    </tr>`;
+            });
                     
-        conteudo += `</table></div>`;
-        container.append(conteudo);
-        
-        let total = carrinho.reduce((soma, item) => soma + item.preco * item.quantidade, 0);
-        carregarClientes(total);
-    }
-
-    function carregarClientes(total) {
-        $.ajax({
-            url: "http://localhost:8080/clientes",
-            method: "GET"
-        }).done(
-            function (clientes) {
-                let totalCarrinho = $("#total-carrinho");
-                totalCarrinho.empty();
-                if (clientes.length != 0) {
-                    let resumo = `
-                        <div class="item-resumo">
-                            <label class="label">Cliente:</label>
-                            <select id="clientes" class="select-categorias">
-                            
-                        `;
-                        
-                    clientes.forEach(function (cliente) {
-                       resumo += `<option value="${cliente.id}">${cliente.nome}</option>`;
-                    })
-                    
-                    resumo += `</select>    
-                        </div>
-                        <div class="item-resumo">
-                            <p>Total: R$ ${total.toFixed(2)}</p>
-                            <button class="button-comprar">Finalizar Compra</button>
-                            </div>`;
-
-                    totalCarrinho.append(resumo);
-                } else {
-
-                    let resumo = `
-                        <div class="item-resumo" >
-                            <label class="label">Não há clientes ativos</label>  
-                        </div>
-                        <div class="item-resumo">
-                            <p>Total: --</p>
-                        </div>
-                        `;
-
-                    totalCarrinho.empty();
-                    totalCarrinho.append(resumo);
-                }
-            }
-        )
-    }
-
-    function alterarQuantidade(index, delta) {
-        let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-        carrinho[index].quantidade += delta;
-
-        if (carrinho[index].quantidade <= 0) {
-            carrinho.splice(index, 1);
+            conteudo += `</table></div>`;
+            container.append(conteudo);
+            
+            let total = carrinho.reduce((soma, item) => soma + item.preco * item.quantidade, 0);
+            carregarClientes(total);
         }
 
-        localStorage.setItem("carrinho", JSON.stringify(carrinho));
-        exibirCarrinho();
-    }
+        function carregarClientes(total) {
+            $.ajax({
+                url: "http://localhost:8080/clientes",
+                method: "GET"
+            }).done(
+                function (clientes) {
+                    let totalCarrinho = $("#total-carrinho");
+                    totalCarrinho.empty();
 
-    function removerItem(index) {
-        let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-        carrinho.splice(index, 1);
-        localStorage.setItem("carrinho", JSON.stringify(carrinho));
-        exibirCarrinho();
-    }
+                    if (clientes.length != 0) {
+                        let resumo = `
+                            <div class="item-resumo">
+                                <label class="label">Cliente:</label>
+                                <select id="cliente" class="select-categorias">
+                                
+                            `;
+                            
+                        clientes.forEach(function (cliente) {
+                            resumo += `<option value="${cliente.id}">${cliente.nome}</option>`;
+                        })
+                        
+                        resumo += `</select>    
+                            </div>
+                            <div class="item-resumo">
+                                <p>Total: R$ ${total.toFixed(2)}</p>
+                                <button type"button" onClick="finalizarCompra()" class="button-comprar">Finalizar Compra</button>
+                                </div>`;
 
-    // function finalizarCompra() {
-    //     let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+                        totalCarrinho.append(resumo);
+                    } else {
 
-    //     if (carrinho.length === 0) {
-    //         alert("Seu carrinho está vazio!");
-    //         return;
-    //     }
+                        let resumo = `
+                            <div class="item-resumo" >
+                                <label class="label">Não há clientes ativos</label>  
+                            </div>
+                            <div class="item-resumo">
+                                <p>Total: --</p>
+                            </div>
+                            `;
 
-    //     $.ajax({
-    //         url: "http://localhost:8080/pedidos",
-    //         method: "POST",
-    //         contentType: "application/json",
-    //         data: JSON.stringify({ itens: carrinho })
-    //     }).done(function() {
-    //         alert("Pedido finalizado com sucesso!");
-    //         localStorage.removeItem("carrinho");
-    //         window.location.href = "paginaPrincipal.html";
-    //     }).fail(function() {
-    //         alert("Erro ao finalizar pedido.");
-    //     });
-    // }
+                        totalCarrinho.empty();
+                        totalCarrinho.append(resumo);
+                    }
+                }
+            )
+        }
+
+        function alterarQuantidade(index, delta) {
+            let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+            carrinho[index].quantidade += delta;
+
+            if (carrinho[index].quantidade <= 0) {
+                carrinho.splice(index, 1);
+            }
+
+            localStorage.setItem("carrinho", JSON.stringify(carrinho));
+            exibirCarrinho();
+        }
+
+        function removerItem(index) {
+            let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+            carrinho.splice(index, 1);
+            localStorage.setItem("carrinho", JSON.stringify(carrinho));
+            exibirCarrinho();
+        }
+
+        function finalizarCompra() {
+            let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+            let idCliente = $("#cliente").val();
+
+            if (carrinho.length === 0) {
+                alert("Seu carrinho está vazio!");
+                return;
+            }
+
+            let itens = carrinho.map(item => ({
+                livro: {id: parseInt(item.id)},
+                quantidade: item.quantidade,
+                precoUnitario: parseFloat(item.preco),
+                devolucao: 0
+            }));
+
+            let pedido = {
+                itens: itens,
+                cliente: {id: parseInt(idCliente)},
+                status: "REALIZADO",
+                dataCompra: new Date().toISOString().split("T")[0]
+            }
+
+            let ids = carrinho.map(item => item.id);
+            $.ajax({
+                url: `http://localhost:8080/livros/verificar`,
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(ids)
+            }).done(
+                function (livrosValidos) {
+                    if (livrosValidos.length !== ids.length) {
+                        alert("Alguns livros do carrinho não estão mais disponíveis.");
+                        return;
+                    }
+
+                    $.ajax({
+                        url: "http://localhost:8080/pedidos",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(pedido)
+                    }).done(function() {
+                        alert("Pedido finalizado com sucesso!");
+                        localStorage.removeItem("carrinho");
+                        window.location.href = "paginaPrincipal.html";
+                    }).fail(function() {
+                        alert("Erro ao finalizar pedido.");
+                    });
+                }
+            ).fail(function() {
+                alert("Erro ao verificar os produtos do carrinho.");
+            });
+
+        }
 
     </script>
 </body>

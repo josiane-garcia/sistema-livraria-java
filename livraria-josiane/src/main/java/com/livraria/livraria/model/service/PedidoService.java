@@ -2,6 +2,7 @@ package com.livraria.livraria.model.service;
 
 import com.livraria.livraria.model.domain.Pedido;
 import com.livraria.livraria.model.repository.PedidoRepository;
+import com.livraria.livraria.model.domain.ItemPedido;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,12 @@ public class PedidoService {
     private PedidoRepository repository;
 
     public Pedido salvarPedido(Pedido pedido) {
+        if (pedido.getItens() != null) {
+            for (ItemPedido item : pedido.getItens()) {
+                item.setPedido(pedido);
+            }
+        }
+
         BigDecimal totalCalculado = pedido.calcularTotalBruto();
         pedido.setTotal(totalCalculado);
 

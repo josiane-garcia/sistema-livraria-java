@@ -7,6 +7,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -30,12 +32,12 @@ public class ItemPedido {
 
     @ManyToOne
     @JoinColumn(name = "pedido_id")
+    @JsonBackReference
     private Pedido pedido;
 
     private int quantidade;
     private int devolucao = 0;
     private BigDecimal precoUnitario;
-    private BigDecimal subTotal;
     
     private LocalDate dataDevolucao;
     private String motivoDevolucao;

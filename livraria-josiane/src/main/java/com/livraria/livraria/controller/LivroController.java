@@ -57,6 +57,11 @@ public class LivroController {
             .orElseThrow(() -> new RuntimeException("Livro não encontrado!"));
     }
 
+    @PostMapping("/verificar")
+    public List<Livro> verificarLivros(@RequestBody List<Long> ids) {
+        return service.verificarLivros(ids);
+    }
+    
     @PostMapping()
     public Livro cadastrarLivro(@RequestBody Livro livro) {
         return service.salvarLivro(livro);

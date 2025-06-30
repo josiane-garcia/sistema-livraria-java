@@ -104,19 +104,21 @@
             }
             
             function excluirCliente(idCliente) {
-                $.ajax({
-                    url: `http://localhost:8080/clientes/${idCliente}`,
-                    method: "DELETE"
-                }).done(
-                    function() {
-                        alert("Cliente excluído com sucesso!");
-                        window.location.href = `clientes.html`;
-                    }
-                ).fail(
-                    function() {
-                        alert("Erro ao excluir o cliente!");
-                    }
-                )
+                if (confirm("Tem certeza que deseja excluir este cliente?")) {
+                    $.ajax({
+                        url: `http://localhost:8080/clientes/desativar/${idCliente}`,
+                        method: "DELETE"
+                    }).done(
+                        function() {
+                            alert("Cliente excluído com sucesso!");
+                            window.location.href = `clientes.html`;
+                        }
+                    ).fail(
+                        function() {
+                            alert("Erro ao excluir o cliente!");
+                        }
+                    )
+                }
             }
 
             $(document).ready(function() {

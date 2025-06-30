@@ -59,7 +59,6 @@
                     <label class="preco">R$ <span id="preco"></span></label>
                     <div style="display: flex;gap: 5px;justify-content: flex-end;">
                     <button typ="button" onClick="adicionarAoCarrinho()" class="button-comprar">ADICIONAR AO CARRINHO</button>
-                    <button class="button-comprar">COMPRAR</button>
                     </div>
                 </div>
             </div>
@@ -121,24 +120,23 @@
                 method: "GET"
             }).done(
                 function (livro) {
-                                let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+                    let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
 
-            let itemExistente = carrinho.find(item => item.id === livro.id);
+                    let itemExistente = carrinho.find(item => item.id === livro.id);
 
-            if (itemExistente) {
-                itemExistente.quantidade += 1;
-            } else {
-                carrinho.push({
-                id: livro.id,
-                titulo: livro.titulo,
-                preco: livro.preco,
-                quantidade: 1
-                });
-            }
+                    if (itemExistente) {
+                        itemExistente.quantidade += 1;
+                    } else {
+                        carrinho.push({
+                        id: livro.id,
+                        titulo: livro.titulo,
+                        preco: livro.preco,
+                        quantidade: 1
+                        });
+                    }
 
-            localStorage.setItem("carrinho", JSON.stringify(carrinho));
-            alert("Livro adicionado ao carrinho!");
-                    // window.location.href = "paginaPrincipal.html";
+                    localStorage.setItem("carrinho", JSON.stringify(carrinho));
+                    alert("Livro adicionado ao carrinho!");
                 }
             ),fail(
                 function (jqXHR, textStatus, errorThrown) {
@@ -152,7 +150,6 @@
         }
 
         function excluirLivro () {
-
             if (confirm("Tem certeza que deseja excluir este livro?")) {
                 $.ajax({
                     url: `http://localhost:8080/livros/${id}`,

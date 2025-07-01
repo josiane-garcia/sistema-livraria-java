@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes do Pedido</title>
+    <link rel="stylesheet" href="css/style-principal.css">
+    <link rel="stylesheet" href="css/style-detalhe.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><img src="../imagens/livraria-img.png" height="40px" width="40px"> Livraria Online</div>
+        <nav class="navBar">
+            <a href="paginaPrincipal.html">Home</a>
+        </nav>
+    </header>
+
+    <div class="header-categorias">
+        <div>
+        </div>
+        <nav class="nav-expanded">
+            <ul>
+                <li class="dropdown"><a href="cadastroLivro.html">Dashboards</a></li>
+                <li class="dropdown"><a>Livros</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="cadastroLivro.html">Cadastrar Livro</a></li>
+                        <li><a href="categorias.html">Categorias</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a>Clientes</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="cadastroCliente.html">Cadastrar Cliente</a></li>
+                        <li><a href="clientes.html">Clientes</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><a href="pedidos.html">Pedidos</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <main>
+        <h2>Detalhes do Pedido</h2>
+        <div id="info-pedido"></div>
+        <h3>Itens do Pedido</h3>
+        <table id="itens-pedido" class="tabela-pedidos">
+            <thead>
+                <tr>
+                    <th>Livro</th>
+                    <th>Preço Unitário</th>
+                    <th>Quantidade</th>
+                    <th>Subtotal</th>
+                    <th>Devolução</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Livraria Online</p>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pedidoId = urlParams.get("id");
+
+            if (!pedidoId) {
+                alert("Pedido não encontrado.");
+                window.location.href = "pedidos.html";
+                return;
+            }
+
+            $.ajax({
+                url: `http://localhost:8080/pedidos/${pedidoId}`,
+                method: "GET",
+                success: function (pedido) {
+                    mostrarInfoPedido(pedido);
+                    mostrarItensPedido(pedido.itens);
+                },
+                error: function () {
+                    alert("Erro ao carregar detalhes do pedido.");
+                }
+            });
+        });
+
+        function formatarData(dataISO) {
+            const [ano, mes, dia] = dataISO.split("-");
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        function mostrarInfoPedido(pedido) {
+            $("#info-pedido").html(`
+                <p><strong>ID do Pedido:</strong> ${pedido.id}</p>
+                <p><strong>Data:</strong> ${formatarData(pedido.dataCompra)}</p>
+                <p><strong>Status:</strong> ${pedido.status}</p>
+                <p><strong>Total:</strong> R$ ${pedido.total?.toFixed(2) || "0.00"}</p>
+            `);
+        }
+
+        function mostrarItensPedido(itens) {
+            const tbody = $("#itens-pedido tbody");
+            tbody.empty();
+
+            itens.forEach(item => {
+                const subtotal = item.precoUnitario * (item.quantidade - item.devolucao);
+                tbody.append(`
+                    <tr>
+                        <td>${item.livro.titulo}</td>
+                        <td>R$ ${item.precoUnitario.toFixed(2)}</td>
+                        <td>${item.quantidade}</td>
+                        <td>R$ ${subtotal.toFixed(2)}</td>
+                        <td>${item.devolucao > 0 ? item.devolucao : '-'}</td>
+                    </tr>
+                `);
+            });
+        }
+    </script>
+</body>
+</html>

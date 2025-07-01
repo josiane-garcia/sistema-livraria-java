@@ -190,3 +190,64 @@
     text-align: center;
   }
 }
+
+/* PEDIDOS */
+
+/* Info do pedido */
+#info-pedido p {
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+/* Tabela */
+.tabela-pedidos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.tabela-pedidos th, .tabela-pedidos td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.tabela-pedidos th {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.tabela-pedidos tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .tabela-pedidos, .tabela-pedidos thead, .tabela-pedidos tbody, .tabela-pedidos th, .tabela-pedidos td, .tabela-pedidos tr {
+        display: block;
+    }
+
+    .tabela-pedidos th {
+        display: none;
+    }
+
+    .tabela-pedidos td {
+        position: relative;
+        padding-left: 50%;
+        text-align: left;
+    }
+
+    .tabela-pedidos td::before {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .tabela-pedidos td:nth-child(1)::before { content: "Livro"; }
+    .tabela-pedidos td:nth-child(2)::before { content: "Preço Unitário"; }
+    .tabela-pedidos td:nth-child(3)::before { content: "Quantidade"; }
+    .tabela-pedidos td:nth-child(4)::before { content: "Subtotal"; }
+    .tabela-pedidos td:nth-child(5)::before { content: "Devolução"; }
+}

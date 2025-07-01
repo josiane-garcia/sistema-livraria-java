@@ -39,6 +39,15 @@ public class PedidoController {
         }
     }
 
+    @GetMapping("/periodo")
+    public List<Pedido> buscarPorMesEAno(
+            @RequestParam(required = false) Integer mes,
+            @RequestParam(required = false) Integer ano,
+            @RequestParam(required = false) String status
+    ) {
+        return service.buscarPorMesEAno(mes, ano, status);
+    }
+
     @GetMapping("/{id}")
     public Pedido buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id)

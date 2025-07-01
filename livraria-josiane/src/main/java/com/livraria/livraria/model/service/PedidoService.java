@@ -49,6 +49,14 @@ public class PedidoService {
         return repository.findAll();
     }
 
+    public List<Pedido> buscarPorMesEAno(Integer mes, Integer ano, String status) {
+        if (mes == null || ano == null) {
+            return repository.findAll();
+        }
+
+        return repository.findByMesEAno(mes, ano);
+    }
+
     public List<Pedido> listarPorStatus(String status) {
         return repository.findByStatus(status);
     }

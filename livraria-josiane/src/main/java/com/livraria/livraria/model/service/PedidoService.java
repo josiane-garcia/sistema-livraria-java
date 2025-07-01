@@ -2,6 +2,7 @@ package com.livraria.livraria.model.service;
 
 import com.livraria.livraria.model.domain.Pedido;
 import com.livraria.livraria.model.repository.PedidoRepository;
+import com.livraria.livraria.model.domain.Cliente;
 import com.livraria.livraria.model.domain.ItemPedido;
 import com.livraria.livraria.model.domain.Livro;
 import com.livraria.livraria.model.repository.LivroRepository;

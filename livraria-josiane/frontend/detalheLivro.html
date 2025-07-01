@@ -159,7 +159,7 @@
         function excluirLivro () {
             if (confirm("Tem certeza que deseja excluir este livro?")) {
                 $.ajax({
-                    url: `http://localhost:8080/livros/${id}`,
+                    url: `http://localhost:8080/livros/desativar/${id}`,
                     method: "DELETE"
                 }).done(
                     function () {

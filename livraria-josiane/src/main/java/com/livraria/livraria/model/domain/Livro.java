@@ -24,6 +24,9 @@ public class Livro {
     private Integer estoque;
     private String descricao;
 
+    @Column(nullable = false)
+    private boolean ativo = true;
+
     @ManyToOne
     @JoinColumn(name = "editora_id")
     private Editora editora;

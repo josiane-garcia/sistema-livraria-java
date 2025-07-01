@@ -37,6 +37,11 @@ public class LivroController {
     private  CategoriaService categoriaService;
 
     @GetMapping
+    public List<Livro> listarLivrosAtivos() {
+        return service.listarLivrosAtivos();
+    }
+
+    @GetMapping("/all")
     public List<Livro> listarLivros() {
         return service.listarLivros();
     }
@@ -87,6 +92,11 @@ public class LivroController {
         livroSalvo.getCategorias().addAll(categorias);
 
         return service.salvarLivro(livroSalvo);
+    }
+    
+    @DeleteMapping("/desativar/{id}")
+    public void desativarCliente(@PathVariable Long id) {
+        service.desativarLivro(id);
     }
 
     @DeleteMapping("/{id}")

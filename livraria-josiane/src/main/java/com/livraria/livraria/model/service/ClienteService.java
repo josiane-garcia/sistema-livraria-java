@@ -28,7 +28,7 @@ public class ClienteService {
     }
 
     public List<Cliente> buscaClientePorTermo(String termo) {
-        return repository.findByNomeContainingIgnoreCase(termo);
+        return repository.findByAtivoTrueAndAllIgnoringCaseNomeContainingIgnoreCase(termo);
     }
 
     public Cliente salvarCliente(Cliente cliente) {

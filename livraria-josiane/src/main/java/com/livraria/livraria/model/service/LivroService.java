@@ -31,6 +31,10 @@ public class LivroService {
         this.repository = repository;
     }
 
+    public List<Livro> listarLivrosAtivos() {
+        return repository.findByAtivoTrue();
+    }
+
     public List<Livro> listarLivros() {
         return repository.findAll();
     }
@@ -40,7 +44,7 @@ public class LivroService {
     }
 
     public List<Livro> listarLivrosPorTermo(String termo) {
-        return repository.findByTituloContainingIgnoreCase(termo);
+        return repository.findByAtivoTrueAndTituloContainingIgnoreCase(termo);
     }
 
     public Optional<Livro> buscaPorId(Long id) {
@@ -59,6 +63,14 @@ public class LivroService {
         }
 
         return repository.save(livro);
+    }
+
+    public void desativarLivro(Long id) {
+        Livro livro = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Livro não encontrado!"));
+
+        livro.setAtivo(false);
+        repository.save(livro);
     }
 
     public void excluirLivro(Long id) {

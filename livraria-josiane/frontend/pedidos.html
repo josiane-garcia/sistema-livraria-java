@@ -107,7 +107,17 @@
             }
 
             pedidos.forEach(function (pedido) {
-                const corStatus = pedido.status === "REALIZADO" ? "green" : "orange";
+                let corStatus = "";
+                switch (pedido.status) {
+                    case "FINALIZADO":
+                        corStatus = "#1cab09";
+                        break;
+                    case "DEVOLVIDO":
+                        corStatus = "#bb0a0a";
+                        break;
+                    default:
+                        corStatus = "#3f53d6";
+                }
 
                 container.append(`
                     <div class="cliente-card">

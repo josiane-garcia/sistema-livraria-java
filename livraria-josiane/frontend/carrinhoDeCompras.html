@@ -34,7 +34,7 @@
             exibirCarrinho();
 
             $("#btn-finalizar").click(function() {
-                finalizarCompra();
+                fazerPedido();
             });
         });
 
@@ -113,7 +113,7 @@
                             </div>
                             <div class="item-resumo">
                                 <p>Total: R$ ${total.toFixed(2)}</p>
-                                <button type"button" onClick="finalizarCompra()" class="button-comprar">Finalizar Compra</button>
+                                <button type"button" onClick="fazerPedido()" class="button-comprar">Fazer Pedido</button>
                                 </div>`;
 
                         totalCarrinho.append(resumo);
@@ -154,7 +154,7 @@
             exibirCarrinho();
         }
 
-        function finalizarCompra() {
+        function fazerPedido() {
             let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
             let idCliente = $("#cliente").val();
 

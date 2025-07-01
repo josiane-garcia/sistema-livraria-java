@@ -65,6 +65,23 @@ public class PedidoService {
         return repository.findById(id);
     }
 
+    public void finalizarPedido(Long id) {
+        Pedido pedido = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+        pedido.setStatus("FINALIZADO");
+        repository.save(pedido);
+    }
+
+    public void pedidoTotalmenteDevolvido(Pedido pedido) {
+        boolean todosDevolvidos = pedido.getItens().stream()
+            .allMatch(item -> item.getDevolucao() >= item.getQuantidade());
+
+        if (todosDevolvidos) {
+            pedido.setStatus("DEVOLVIDO");
+            repository.save(pedido);
+        }
+    }
+
     public void excluir(Long id) {
         repository.deleteById(id);
     }

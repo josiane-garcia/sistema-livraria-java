@@ -32,7 +32,7 @@ public class Pedido {
 
     private LocalDate dataCompra;
 
-    // "REALIZADO", "PAGO", "CANCELADO"
+    // "REALIZADO", "FINALIZADO", "DEVOLVIDO"
     private String status;
 
     @ManyToOne

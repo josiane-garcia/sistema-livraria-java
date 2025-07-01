@@ -193,61 +193,102 @@
 
 /* PEDIDOS */
 
-/* Info do pedido */
-#info-pedido p {
+.card-pedido {
+    margin: 20px auto;
+    max-width: 700px;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-pedido p {
     font-size: 16px;
-    margin: 8px 0;
+    margin: 6px 0;
 }
 
-/* Tabela */
 .tabela-pedidos {
-    width: 100%;
+    width: 90%;
+    margin: 20px auto;
     border-collapse: collapse;
-    margin-top: 15px;
-}
-
-.tabela-pedidos th, .tabela-pedidos td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
+    font-family: Arial, sans-serif;
 }
 
 .tabela-pedidos th {
-    background-color: #f0f0f0;
-    color: #333;
+    background-color: #a2a6f2;
+    color: #fff;
+    text-align: left;
+    padding: 10px;
 }
 
-.tabela-pedidos tr:nth-child(even) {
-    background-color: #f9f9f9;
+.tabela-pedidos td {
+    padding: 10px;
+    border: 1px solid #ccc;
 }
 
-/* Responsividade */
-@media (max-width: 600px) {
-    .tabela-pedidos, .tabela-pedidos thead, .tabela-pedidos tbody, .tabela-pedidos th, .tabela-pedidos td, .tabela-pedidos tr {
-        display: block;
-    }
-
-    .tabela-pedidos th {
-        display: none;
-    }
-
-    .tabela-pedidos td {
-        position: relative;
-        padding-left: 50%;
-        text-align: left;
-    }
-
-    .tabela-pedidos td::before {
-        position: absolute;
-        left: 10px;
-        top: 10px;
-        font-weight: bold;
-        white-space: nowrap;
-    }
-
-    .tabela-pedidos td:nth-child(1)::before { content: "Livro"; }
-    .tabela-pedidos td:nth-child(2)::before { content: "Preço Unitário"; }
-    .tabela-pedidos td:nth-child(3)::before { content: "Quantidade"; }
-    .tabela-pedidos td:nth-child(4)::before { content: "Subtotal"; }
-    .tabela-pedidos td:nth-child(5)::before { content: "Devolução"; }
+.tabela-pedidos td input[type="checkbox"] {
+    transform: scale(1.3);
 }
+
+.button-confirmar, .button-devolver, .button-finalizar {
+    display: block;
+    margin: 20px auto;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.button-confirmar {  
+    background-color: #800022;
+    display: none;
+}
+
+.button-confirmar:hover {
+    background-color: #6a021e;
+}
+.button-devolver {  
+    background-color: #d37809;
+}
+
+.button-devolver:hover {
+    background-color: #b76908;
+}
+
+.button-finalizar {  
+    background-color: #008060;
+}
+
+.button-finalizar:hover {
+    background-color: #01694a;
+}
+
+.coluna-selecionar {
+  display: none;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+

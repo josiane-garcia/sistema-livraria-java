@@ -5,6 +5,7 @@
     <title>Detalhes do Pedido</title>
     <link rel="stylesheet" href="css/style-principal.css">
     <link rel="stylesheet" href="css/style-detalhe.css">
+    <link rel="stylesheet" href="css/style-categorias.css">
 </head>
 <body>
     <header>
@@ -15,8 +16,7 @@
     </header>
 
     <div class="header-categorias">
-        <div>
-        </div>
+        <div></div>
         <nav class="nav-expanded">
             <ul>
                 <li class="dropdown"><a href="cadastroLivro.html">Dashboards</a></li>
@@ -38,10 +38,10 @@
     </div>
 
     <main>
-        <h2>Detalhes do Pedido</h2>
-        <div id="info-pedido"></div>
-        <h3>Itens do Pedido</h3>
-        <table id="itens-pedido" class="tabela-pedidos">
+        <h2 style="text-align: center;">Detalhes do Pedido</h2>
+        <div id="info-pedido" class="card-pedido"></div>
+        <h3 style="text-align:center;">Itens do Pedido</h3>
+        <table id="itens-pedido">
             <thead>
                 <tr>
                     <th>Livro</th>
@@ -49,10 +49,30 @@
                     <th>Quantidade</th>
                     <th>Subtotal</th>
                     <th>Devolução</th>
+                    <th>Data de Devolução</th>
+                    <th>Motivo de Devolução</th>
+                    <th class="coluna-selecionar">Selecionar</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
+
+        <button id="confirmar-devolucao" class="button-confirmar">Confirmar Devolução</button>
+
+        <div id="popup-devolucao" class="popup" style="display:none;">
+            <div class="popup-content">
+                <h3>Devolução do Item <span id="popup-livro-nome"></span></h3>
+                <label class="label">Quantidade a devolver:</label>
+                <input type="number" id="quantidade-devolucao" min="1" />
+                <label class="label">Motivo:</label>
+                <textarea id="motivo-devolucao" rows="3"></textarea>
+                <br>
+                <div style="display: flex;flex-direction: row;">
+                    <button id="confirmar-popup" class="button-finalizar">Confirmar</button>
+                    <button onclick="fecharPopup()" class="button-devolver">Cancelar</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
@@ -61,20 +81,50 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
+        let pedidoGlobal = null;
+
+        let devolucoesSelecionadas = [];
+
+        function fecharPopup() {
+            $("#popup-devolucao").hide();
+        }
+
+        $("#confirmar-popup").on("click", function () {
+            const id = $("#popup-devolucao").data("item-id");
+            const devolucao = parseInt($("#quantidade-devolucao").val());
+            const motivoDevolucao = $("#motivo-devolucao").val().trim();
+
+            if (devolucao < 1 || !motivoDevolucao) {
+                alert("Preencha todos os campos.");
+                return;
+            }
+
+            // Verifica se o item já foi adicionado (evita duplicação)
+            const index = devolucoesSelecionadas.findIndex(d => d.id === id);
+            if (index !== -1) {
+                devolucoesSelecionadas.splice(index, 1); // remove se já existia
+            }
+
+            devolucoesSelecionadas.push({ id: parseInt(id), devolucao, motivoDevolucao });
+
+            fecharPopup();
+        });
+
         $(document).ready(function () {
             const urlParams = new URLSearchParams(window.location.search);
-            const pedidoId = urlParams.get("id");
+            const idPedido = urlParams.get("id");
 
-            if (!pedidoId) {
+            if (!idPedido) {
                 alert("Pedido não encontrado.");
                 window.location.href = "pedidos.html";
                 return;
             }
 
             $.ajax({
-                url: `http://localhost:8080/pedidos/${pedidoId}`,
+                url: `http://localhost:8080/pedidos/${idPedido}`,
                 method: "GET",
                 success: function (pedido) {
+                    pedidoGlobal = pedido;
                     mostrarInfoPedido(pedido);
                     mostrarItensPedido(pedido.itens);
                 },
@@ -90,12 +140,53 @@
         }
 
         function mostrarInfoPedido(pedido) {
+            let corStatus = "";
+                switch (pedido.status) {
+                    case "FINALIZADO":
+                        corStatus = "#1cab09";
+                        break;
+                    case "DEVOLVIDO":
+                        corStatus = "#bb0a0a";
+                        break;
+                    default:
+                        corStatus = "#3f53d6";
+                }
+
             $("#info-pedido").html(`
-                <p><strong>ID do Pedido:</strong> ${pedido.id}</p>
-                <p><strong>Data:</strong> ${formatarData(pedido.dataCompra)}</p>
-                <p><strong>Status:</strong> ${pedido.status}</p>
-                <p><strong>Total:</strong> R$ ${pedido.total?.toFixed(2) || "0.00"}</p>
+                <div>
+                    <p><strong>ID do Pedido:</strong> ${pedido.id}</p>
+                    <p><strong>Cliente:</strong> ${pedido.cliente?.nome || "N/A"}</p>
+                    <p><strong>Data:</strong> ${formatarData(pedido.dataCompra)}</p>
+                    <p><strong>Status:</strong> <span style="color: ${corStatus}">${pedido.status}</span></p>
+                    <p><strong>Total:</strong> R$ ${pedido.total?.toFixed(2) || "0.00"}</p>
+                </div>
+                <div>
+                    <button id="finalizar-pedido" class="button-finalizar" onClick="confirmarEntrega(${pedido.id})">Confirmar entrega de itens</button>
+                    <button id="devolver-itens" class="button-devolver">Fazer devolução de itens</button>  
+                </div>
             `);
+
+            if (pedido.status === "FINALIZADO" || pedido.status === "DEVOLVIDO") {
+                $("#finalizar-pedido").hide();
+                $("#devolver-itens").hide();
+                $("#confirmar-devolucao").hide();
+            }
+        }
+
+        function confirmarEntrega(idPedido) {
+            if (confirm("Deseja confirmar a entrega de itens do pedido?")) {
+                $.ajax({
+                    url: `http://localhost:8080/pedidos/finalizar/${idPedido}`,
+                    method: "PUT"
+                }).done (
+                    function() {
+                        alert("Entrega de itens concluída!");
+                        window.location.href = `detalhesPedido.html?id=${idPedido}`;
+                    }
+                ).fail (function(){
+                    alert("Erro ao concluir a entrega de itens.");
+                });
+            }
         }
 
         function mostrarItensPedido(itens) {
@@ -111,8 +202,58 @@
                         <td>${item.quantidade}</td>
                         <td>R$ ${subtotal.toFixed(2)}</td>
                         <td>${item.devolucao > 0 ? item.devolucao : '-'}</td>
+                        <td>${item.dataDevolucao != null ? formatarData(item.dataDevolucao) : '-'}</td>
+                        <td>${item.motivoDevolucao != null ? item.motivoDevolucao : '-'}</td>
+                        <td class="coluna-selecionar"><input type="checkbox" class="devolver-checkbox" value="${item.id}"></td>
                     </tr>
                 `);
+            });
+
+            let modoDevolucaoAtivo = false;
+            $("#devolver-itens").on("click", function () {
+                modoDevolucaoAtivo = !modoDevolucaoAtivo;
+
+                if (modoDevolucaoAtivo) {
+                    $(".coluna-selecionar").show();
+                    $("#confirmar-devolucao").show();
+                    $(this).text("Cancelar Devolução");
+                } else {
+                    $(".coluna-selecionar").hide();
+                    $("#confirmar-devolucao").hide();
+                    $(this).text("Solicitar Devolução");
+                }
+            });
+
+            $(".devolver-checkbox").on("change", function () {
+                if (this.checked) {
+                    const itemId = $(this).val();
+                    const item = itens.find(i => i.id == itemId);
+
+                    $("#popup-livro-nome").text(item.livro.titulo);
+                    $("#quantidade-devolucao").val(1).attr("max", item.quantidade - item.devolucao);
+                    $("#popup-devolucao").data("item-id", itemId).show();
+                }
+            });
+
+            $("#confirmar-devolucao").on("click", function () {
+                if (devolucoesSelecionadas.length === 0) {
+                    alert("Selecione ao menos um item para devolver.");
+                    return;
+                }
+                
+                if (confirm("Deseja confirmar a devolução dos itens selecionados?")){
+                    $.ajax({
+                        url: `http://localhost:8080/itens/devolver`,
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(devolucoesSelecionadas)
+                    }).done(() => {
+                        alert("Devolução concluída!");
+                        location.reload();
+                    }).fail((jqXHR) => {
+                        alert("Erro ao processar devolução: " + jqXHR.responseText);
+                    });
+                }
             });
         }
     </script>

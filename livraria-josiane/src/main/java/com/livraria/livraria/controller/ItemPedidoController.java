@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -39,6 +40,12 @@ public class ItemPedidoController {
     public ItemPedido buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id)
                 .orElseThrow(() -> new RuntimeException("ItemPedido não encontrado"));
+    }
+
+    @PostMapping("/devolver")
+    public ResponseEntity<Void> registrarDevolucao(@RequestBody List<ItemPedido> itensRecebidos) {
+        service.registrarDevolucaoDireta(itensRecebidos);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

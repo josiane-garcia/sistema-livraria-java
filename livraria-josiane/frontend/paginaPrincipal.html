@@ -101,19 +101,28 @@
                 }
 
                 livros.forEach(function (livro) {
-                    $("#livros").append(
-                        `<div class="livro-card" style="align-items: left;"">
+                    let livroConteudo = `
+                        <div class="livro-card" style="align-items: left;"">
                             <h3>${livro.titulo}</h3>
                             <p><strong>Autor:</strong> ${livro.autor}</p>
                             <p><strong>Editora:</strong> ${livro.editora.nome}</p>
                             <p><strong>Preço:</strong> R$ ${livro.preco}</p>
 
                             <div class='div-buttons'>
-                                <button class='button-card' type='button' onClick="verProduto(${livro.id})">Ver mais</buton>
-                                <button class='button-card' type='button' onClick="adicionarAoCarrinho(${livro.id}, '${livro.titulo}', '${livro.preco}')">Adicionar ao carrinho</buton>
-                            </div>
-                        </div>`
-                    )
+                                <button class='button-card' type='button' onClick="verProduto(${livro.id})">Ver mais</buton>`;
+                            
+                        if (parseInt(livro.estoque) <= 0) {
+                            livroConteudo += `<button class="div-estoque">Não há estoque</button>`;
+                        } else{
+                            livroConteudo += `<button class='button-card' type='button' onClick="adicionarAoCarrinho(${livro.id}, '${livro.titulo}', '${livro.preco}')">Adicionar ao carrinho</buton>`;
+                        }       
+                            
+                        livroConteudo += `</div>
+                        </div>`;
+
+                        console.log(livro.estoque);
+                        $("#livros").append(livroConteudo);
+                    
                 })
             }
 

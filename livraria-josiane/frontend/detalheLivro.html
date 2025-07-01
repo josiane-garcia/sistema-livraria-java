@@ -58,7 +58,8 @@
                 <div class="conteiner-card">
                     <label class="preco">R$ <span id="preco"></span></label>
                     <div style="display: flex;gap: 5px;justify-content: flex-end;">
-                    <button typ="button" onClick="adicionarAoCarrinho()" class="button-comprar">ADICIONAR AO CARRINHO</button>
+                    <button id="button-carrinho" type="button" onClick="adicionarAoCarrinho()" class="button-comprar">ADICIONAR AO CARRINHO</button>
+                    <div id="button-estoque" class="div-estoque" style="display:none">NÃO HÁ ESTOQUE</div>
                     </div>
                 </div>
             </div>
@@ -111,6 +112,12 @@
                                 ${categoria.nome}</label>`
                     )
                 })
+
+                if (produto.estoque <= 0) {
+                    $("#button-carrinho").hide();
+                    $("#button-estoque").show();
+                }
+                
             }
         );
 

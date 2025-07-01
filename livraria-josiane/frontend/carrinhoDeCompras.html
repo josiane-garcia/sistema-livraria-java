@@ -199,8 +199,12 @@
                         alert("Pedido finalizado com sucesso!");
                         localStorage.removeItem("carrinho");
                         window.location.href = "paginaPrincipal.html";
-                    }).fail(function() {
-                        alert("Erro ao finalizar pedido.");
+                    }).fail(function(jqXHR) {
+                        if (jqXHR.responseText != undefined) {
+                            alert("Erro: " + jqXHR.responseText);
+                        } else {
+                            alert("Erro ao finalizar pedido.");
+                        }
                     });
                 }
             ).fail(function() {

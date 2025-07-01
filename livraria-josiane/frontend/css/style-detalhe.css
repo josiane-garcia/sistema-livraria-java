@@ -89,6 +89,18 @@
   background: var(--purple-clean);
 }
 
+.div-estoque {
+    background: rgb(163, 3, 3);
+    border: none;
+    color: #fff;
+    padding: 15px 30px;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
 .frete input[type="text"] {
   padding: 10px;
   border: 2px solid #ccc;

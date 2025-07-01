@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Map;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -64,5 +67,23 @@ public class PedidoController {
     @DeleteMapping("/{id}")
     public void excluirPedido(@PathVariable Long id) {
         service.excluir(id);
+    }
+
+    @GetMapping("/dashboard")
+    public Map<String, Object> gerarRelatorio(@RequestParam int ano, @RequestParam int mes) {
+        Map<String, Object> relatorio = new HashMap<>();
+
+        relatorio.put("mediaFinalizados", service.calcularMediaPedidosFinalizados(ano, mes));
+        relatorio.put("maiorFinalizado", service.maiorPedidoFinalizado(ano, mes));
+        relatorio.put("menorFinalizado", service.menorPedidoFinalizado(ano, mes));
+
+        relatorio.put("mediaRealizados", service.calcularMediaPedidosRealizados(ano, mes));
+        relatorio.put("maiorRealizado", service.maiorPedidoRealizado(ano, mes));
+        relatorio.put("menorRealizado", service.menorPedidoRealizado(ano, mes));
+
+        relatorio.put("livroMaisVendido", service.livroMaisVendido(ano, mes));
+        relatorio.put("livroMaisDevolvido", service.livroMaisDevolvido(ano, mes));
+
+        return relatorio;
     }
 }

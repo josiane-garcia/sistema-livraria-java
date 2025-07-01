@@ -14,14 +14,12 @@ import java.util.List;
 
 @Service
 public class CategoriaService {
-    private final CategoriaRepository repository;
+
+    @Autowired
+    private CategoriaRepository repository;
 
     @Autowired
     private LivroRepository livroRepository;
-
-    public CategoriaService(CategoriaRepository repository) {
-        this.repository = repository;
-    }
 
     public List<Categoria> listarTodas() {
         return repository.findAll();
@@ -51,7 +49,7 @@ public class CategoriaService {
     public void excluirCategoria(Long id) {
         Categoria categoria = this.buscarPorId(id);
 
-        List<Livro> livros = livroRepository.findByCategorias_Id(id);
+        List<Livro> livros = livroRepository.findByAtivoTrueAndCategorias_Id(id);
 
         for (Livro livro : livros) {
             livro.getCategorias().remove(categoria);

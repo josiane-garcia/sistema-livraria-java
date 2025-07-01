@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard de Vendas</title>
+    <link rel="stylesheet" href="css/style-principal.css">
+    <link rel="stylesheet" href="css/style-detalhe.css">
+</head>
+<body>
+    <header>
+        <div class="logo"><img src="../imagens/livraria-img.png" height="40px" width="40px"> Livraria Online</div>
+        <nav class="navBar">
+            <a href="paginaPrincipal.html">Home</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Dashboard de Vendas</h2>
+
+        <div class="filtro">
+            <label lass="label" for="mes">Mês:</label>
+            <select id="mes" class="select-categorias">
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9">Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+            </select>
+
+            <label class="label" for="ano">Ano:</label>
+            <select class="select-categorias" id="ano">
+            </select>
+
+            <button class="button-comprar" onclick="carregarDashboard()">Filtrar</button>
+        </div>
+
+        <div class="card-container" id="cards-dashboard"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Livraria Online</p>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const anoAtual = new Date().getFullYear();
+            for (let i = anoAtual - 5; i <= anoAtual + 1; i++) {
+                $('#ano').append(`<option value="${i}">${i}</option>`);
+            }
+
+            $("#mes").val(new Date().getMonth() + 1);
+            $("#ano").val(anoAtual);
+            carregarDashboard();
+        });
+
+        function carregarDashboard() {
+            const mes = $("#mes").val();
+            const ano = $("#ano").val();
+
+            $.ajax({
+                url: `http://localhost:8080/pedidos/dashboard?ano=${ano}&mes=${mes}`,
+                method: "GET"
+            }).done(function (resposta) {
+                let html = `
+                    <div class="dashboard-card">
+                        <h3>Pedidos FINALIZADOS</h3>
+                        <p>Média: R$ ${resposta.mediaFinalizados.toFixed(2)}</p>
+                        <p>Maior: R$ ${resposta.maiorFinalizado.toFixed(2)}</p>
+                        <p>Menor: R$ ${resposta.menorFinalizado.toFixed(2)}</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Pedidos REALIZADOS</h3>
+                        <p>Média: R$ ${resposta.mediaRealizados.toFixed(2)}</p>
+                        <p>Maior: R$ ${resposta.maiorRealizado.toFixed(2)}</p>
+                        <p>Menor: R$ ${resposta.menorRealizado.toFixed(2)}</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Livro Mais Vendido</h3>
+                        <p>${resposta.livroMaisVendido || 'Nenhum'}</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Livro Mais Devolvido</h3>
+                        <p>${resposta.livroMaisDevolvido || 'Nenhum'}</p>
+                    </div>
+                `;
+
+                $("#cards-dashboard").html(html);
+            }).fail(function () {
+                alert("Erro ao carregar dados da dashboard.");
+            });
+        }
+    </script>
+</body>
+</html>

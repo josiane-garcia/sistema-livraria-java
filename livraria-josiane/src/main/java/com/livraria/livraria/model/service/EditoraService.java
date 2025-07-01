@@ -3,16 +3,15 @@ package com.livraria.livraria.model.service;
 import com.livraria.livraria.model.repository.EditoraRepository;
 import org.springframework.stereotype.Service;
 import com.livraria.livraria.model.domain.Editora;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Service
 public class EditoraService {
-    private final EditoraRepository repository;
 
-    public EditoraService(EditoraRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private EditoraRepository repository;
 
     public List<Editora> listarTodas() {
         return repository.findAll();

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -22,11 +23,8 @@ import java.util.List;
 @RequestMapping("/editoras")
 public class EditoraController {
 
-    private final EditoraService service;
-
-    public EditoraController(EditoraService service) {
-        this.service = service;
-    }
+    @Autowired
+    private EditoraService service;
     
     @GetMapping
     public List<Editora> listar() {

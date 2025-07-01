@@ -3,16 +3,15 @@ package com.livraria.livraria.model.service;
 import com.livraria.livraria.model.repository.ClienteRepository;
 import org.springframework.stereotype.Service;
 import com.livraria.livraria.model.domain.Cliente;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Service
 public class ClienteService {
-    private final ClienteRepository repository;
 
-    public ClienteService(ClienteRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private ClienteRepository repository;
 
     public List<Cliente> listarAtivos() {
         return repository.findByAtivoTrue();

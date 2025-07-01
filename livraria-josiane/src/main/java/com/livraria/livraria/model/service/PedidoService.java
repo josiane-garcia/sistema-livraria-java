@@ -2,7 +2,6 @@ package com.livraria.livraria.model.service;
 
 import com.livraria.livraria.model.domain.Pedido;
 import com.livraria.livraria.model.repository.PedidoRepository;
-import com.livraria.livraria.model.domain.Cliente;
 import com.livraria.livraria.model.domain.ItemPedido;
 import com.livraria.livraria.model.domain.Livro;
 import com.livraria.livraria.model.repository.LivroRepository;
@@ -11,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.time.YearMonth;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
-
 
 @Service
 public class PedidoService {
@@ -85,5 +86,37 @@ public class PedidoService {
 
     public void excluir(Long id) {
         repository.deleteById(id);
+    }
+
+    public BigDecimal calcularMediaPedidosFinalizados(int ano, int mes) {
+        return repository.mediaPedidosFinalizados(ano, mes);
+    }
+
+    public BigDecimal maiorPedidoFinalizado(int ano, int mes) {
+        return repository.maiorPedidoFinalizado(ano, mes);
+    }
+
+    public BigDecimal menorPedidoFinalizado(int ano, int mes) {
+        return repository.menorPedidoFinalizado(ano, mes);
+    }
+
+    public BigDecimal calcularMediaPedidosRealizados(int ano, int mes) {
+        return repository.mediaPedidosRealizados(ano, mes);
+    }
+
+    public BigDecimal maiorPedidoRealizado(int ano, int mes) {
+        return repository.maiorPedidoRealizado(ano, mes);
+    }
+
+    public BigDecimal menorPedidoRealizado(int ano, int mes) {
+        return repository.menorPedidoRealizado(ano, mes);
+    }
+
+    public String livroMaisVendido(int ano, int mes) {
+        return repository.livroMaisVendido(ano, mes);
+    }
+
+    public String livroMaisDevolvido(int ano, int mes) {
+        return repository.livroMaisDevolvido(ano, mes);
     }
 }

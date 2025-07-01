@@ -15,18 +15,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/clientes")
 public class ClienteController {
-    private final ClienteService service;
 
-    public ClienteController(ClienteService service) {
-        this.service = service;
-    }
+    @Autowired
+    private ClienteService service;
 
     @GetMapping
     public List<Cliente> getClientesAtivos() {

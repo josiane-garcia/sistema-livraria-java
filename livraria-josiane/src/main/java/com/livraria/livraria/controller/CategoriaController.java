@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -19,11 +20,9 @@ import java.util.List;
 @RequestMapping("/categorias")
 @CrossOrigin(origins = "*")
 public class CategoriaController {
-    private final CategoriaService service;
-
-    public CategoriaController(CategoriaService service) {
-        this.service = service;
-    }
+    
+    @Autowired
+    private CategoriaService service;
 
     @GetMapping
     public List<Categoria> listarAtivas() {

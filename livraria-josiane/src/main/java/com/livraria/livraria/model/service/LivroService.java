@@ -18,18 +18,15 @@ import java.util.Optional;
 
 @Service
 public class LivroService {
-    private final LivroRepository repository;
+
+    @Autowired
+    private LivroRepository repository;
 
     @Autowired
     private CategoriaRepository categoriaRepository;
     
     @Autowired
     private EditoraRepository editoraRepository;
-
-
-    public LivroService(LivroRepository repository) {
-        this.repository = repository;
-    }
 
     public List<Livro> listarLivrosAtivos() {
         return repository.findByAtivoTrue();
@@ -40,7 +37,7 @@ public class LivroService {
     }
 
     public List<Livro> listarLivrosPorCategoria(Long idCategoria) {
-        return repository.findByCategorias_Id(idCategoria);
+        return repository.findByAtivoTrueAndCategorias_Id(idCategoria);
     }
 
     public List<Livro> listarLivrosPorTermo(String termo) {

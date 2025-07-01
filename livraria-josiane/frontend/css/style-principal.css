@@ -255,3 +255,61 @@ footer {
     margin: 0;
 }
 
+/* DASHBOARD */
+
+.dashboard-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+
+.dashboard-card {
+    flex: 1 1 300px;
+    background-color: #f3f3f3;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 5px #aaa;
+}
+
+.dashboard-card h3 {
+    margin-bottom: 10px;
+}
+
+.filtros-dashboard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.resumo-dashboard {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.resumo-dashboard p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+select, input[type="number"], button {
+    padding: 6px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #125ca1;
+}

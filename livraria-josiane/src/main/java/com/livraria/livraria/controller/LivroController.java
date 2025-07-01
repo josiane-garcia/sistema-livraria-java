@@ -27,11 +27,9 @@ import java.util.List;
 @RequestMapping("/livros")
 @CrossOrigin(origins = "*")
 public class LivroController {
-    private final LivroService service;
 
-    public LivroController(LivroService service) {
-        this.service = service;
-    }
+    @Autowired
+    private LivroService service;
 
     @Autowired
     private  CategoriaService categoriaService;
